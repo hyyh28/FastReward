@@ -95,7 +95,7 @@ database:
 
 evaluator:
   # One candidate evaluation may take ~10h (two training groups), keep extra margin.
-  timeout: 43200
+  timeout: 80000
   max_retries: 1
   parallel_evaluations: 1
   cascade_evaluation: true
