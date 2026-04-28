@@ -1,14 +1,19 @@
+from abc import ABC
 from dataclasses import dataclass
 from typing import List
 
 
+class ExperimentConfig(ABC):
+    """Abstract base config. Concrete env configs define all fields."""
+
+
 @dataclass
-class ExperimentConfig:
+class MountainCarConfig(ExperimentConfig):
     candidates: List[str]
     total_budget: int = 3_600_000
-    # 4 个候选时: 4 * 300_000 = 1_200_000 = total_budget / 3
     warmup_budget_per_candidate: int = 200_000
     delta_budget_per_round: int = 32_768
+    # 4 个候选时: 4 * 200_000 = 800_000 作为 warmup
     n_envs: int = 16
     n_steps: int = 16
     gamma: float = 0.99

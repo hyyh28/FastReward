@@ -41,11 +41,11 @@ class PerformanceMonitor:
 
     def print_round(self, tag, consumed_budget, stats, allocations, shaped_means):
         print(
-            f"[{tag:7s}] 预算:{consumed_budget:7d} | "
-            f"得分:{[round(s['mean'], 1) for s in stats]} | "
-            f"本轮分配:{dict(zip(self.candidates, allocations.tolist()))} | "
-            f"累计分配:{dict(zip(self.candidates, self.cumulative_allocation.tolist()))} | "
-            f"平均单回合塑形累积奖励:{dict(zip(self.candidates, [round(x, 1) for x in shaped_means]))}"
+            f"[{tag:7s}] Budget:{consumed_budget:7d} | "
+            f"Scores:{[round(s['mean'], 1) for s in stats]} | "
+            f"Round Allocation:{dict(zip(self.candidates, allocations.tolist()))} | "
+            f"Cumulative Allocation:{dict(zip(self.candidates, self.cumulative_allocation.tolist()))} | "
+            f"Mean Shaped Return per Episode:{dict(zip(self.candidates, [round(x, 1) for x in shaped_means]))}"
         )
 
     def export(self):

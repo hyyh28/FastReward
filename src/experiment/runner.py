@@ -2,13 +2,13 @@ import numpy as np
 from stable_baselines3 import PPO
 from stable_baselines3.common.evaluation import evaluate_policy
 
-from src.config import ExperimentConfig
+from src.config import MountainCarConfig
 from src.envs.scenario_factory import MountainCarScenarioFactory
 from src.monitoring.performance_monitor import PerformanceMonitor
 
 
 class ExperimentRunner:
-    def __init__(self, config: ExperimentConfig, allocation_strategy):
+    def __init__(self, config: MountainCarConfig, allocation_strategy):
         self.cfg = config
         self.strategy = allocation_strategy
         self.factory = MountainCarScenarioFactory(gamma=config.gamma)
