@@ -141,7 +141,12 @@ class CandidateAllocatorEvaluator:
             warmup = np.full(self.cfg.n_arms, self.cfg.warmup_budget_per_arm, dtype=int)
             for idx, budget in enumerate(warmup):
                 if budget > 0:
-                    models[idx].learn(total_timesteps=int(budget), reset_num_timesteps=False)
+                    models[idx].learn(
+                        total_timesteps=int(budget),
+                        reset_num_timesteps=False,
+                        log_interval=1,
+                        progress_bar=True,
+                    )
             consumed_budget += int(np.sum(warmup))
 
             round_idx = 0
@@ -172,7 +177,12 @@ class CandidateAllocatorEvaluator:
                 allocations = np.asarray(allocations, dtype=int)
                 for arm_idx, budget in enumerate(allocations):
                     if budget > 0:
-                        models[arm_idx].learn(total_timesteps=int(budget), reset_num_timesteps=False)
+                        models[arm_idx].learn(
+                            total_timesteps=int(budget),
+                            reset_num_timesteps=False,
+                            log_interval=1,
+                            progress_bar=True,
+                        )
 
                 consumed_budget += int(np.sum(allocations))
                 round_idx += 1
