@@ -46,6 +46,12 @@ class DetailedCellsObsWrapper(gym.ObservationWrapper):
         return observation["detailed_cells"]
 
 
+class MaskableMonitor(Monitor):
+    def action_masks(self) -> np.ndarray:
+        action_masks_fn = self.env.get_wrapper_attr("action_masks")
+        return action_masks_fn()
+
+
 class MountainCarScenarioFactory:
     def __init__(self, gamma: float):
         self.gamma = gamma
@@ -106,7 +112,7 @@ class FirecastrlFactory:
                 env = CustomRewardWrapper(env, reward_fn=reward_function)
                 env = FireActionMaskWrapper(env, r=spray_radius)
                 env = DetailedCellsObsWrapper(env)
-                env = Monitor(env)
+                env = MaskableMonitor(env)
                 env.reset(seed=seed + rank)
                 return env
 

@@ -16,11 +16,33 @@ def parse_args():
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--log-dir", type=str, default="logs/firecastrl_maskable_cnn")
     parser.add_argument("--spray-radius", type=int, default=5)
+    parser.add_argument(
+        "--vec-env-type",
+        type=str,
+        default="dummy",
+        choices=["dummy", "subproc"],
+        help="Vectorized env backend for both train and eval envs.",
+    )
+    parser.add_argument("--n-steps", type=int, default=4096)
+    parser.add_argument("--batch-size", type=int, default=256)
+    parser.add_argument("--n-epochs", type=int, default=10)
+    parser.add_argument("--n-eval-episodes", type=int, default=10)
+    parser.add_argument(
+        "--fast-mode",
+        action="store_true",
+        help="Use a faster training profile to finish experiments sooner.",
+    )
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
+    if args.fast_mode:
+        args.total_timesteps = min(args.total_timesteps, 1_000_000)
+        args.n_steps = min(args.n_steps, 2048)
+        args.n_epochs = min(args.n_epochs, 5)
+        args.n_eval_episodes = min(args.n_eval_episodes, 2)
+
     log_dir = Path(args.log_dir)
     tb_dir = log_dir / "tb"
     ckpt_dir = log_dir / "checkpoints"
@@ -35,22 +57,22 @@ def main():
         n_envs=args.n_envs,
         seed=args.seed,
         spray_radius=args.spray_radius,
-        vec_env_type="subproc",
+        vec_env_type=args.vec_env_type,
     )
     eval_env = factory.make_maskable_cnn_vec_env(
         n_envs=1,
         seed=args.seed + 10_000,
         spray_radius=args.spray_radius,
-        vec_env_type="dummy",
+        vec_env_type=args.vec_env_type,
     )
 
     model = MaskablePPO(
         policy=MaskableActorCriticCnnPolicy,
         env=train_env,
         learning_rate=1e-4,
-        n_steps=4096,
-        batch_size=256,
-        n_epochs=10,
+        n_steps=args.n_steps,
+        batch_size=args.batch_size,
+        n_epochs=args.n_epochs,
         gamma=0.997,
         gae_lambda=0.98,
         ent_coef=0.01,
@@ -61,21 +83,21 @@ def main():
     )
 
     checkpoint_callback = CheckpointCallback(
-        save_freq=max(100_000 // args.n_envs, 1),
+        save_freq=max((200_000 if args.fast_mode else 100_000) // args.n_envs, 1),
         save_path=str(ckpt_dir),
         name_prefix="maskable_ppo_firecastrl",
     )
     eval_callback = MaskableEvalCallback(
         eval_env=eval_env,
         best_model_save_path=str(best_dir),
-        eval_freq=max(50_000 // args.n_envs, 1),
-        n_eval_episodes=10,
+        eval_freq=max((200_000 if args.fast_mode else 50_000) // args.n_envs, 1),
+        n_eval_episodes=args.n_eval_episodes,
         deterministic=True,
     )
     callback = CallbackList([checkpoint_callback, eval_callback])
 
     try:
-        model.learn(total_timesteps=args.total_timesteps, callback=callback)
+        model.learn(total_timesteps=args.total_timesteps, callback=callback, log_interval=1, progress_bar=True)
         model.save(str(log_dir / "final_model"))
     finally:
         train_env.close()

@@ -1,0 +1,65 @@
+max_iterations: 30
+checkpoint_interval: 5
+log_level: INFO
+random_seed: 42
+file_suffix: ".py"
+
+llm:
+  # DeepSeek OpenAI-compatible endpoint.
+  api_base: https://api.deepseek.com/v1
+  api_key: ${OPENAI_API_KEY}
+  temperature: 0.7
+  max_tokens: 4096
+  timeout: 90
+  retries: 3
+  retry_delay: 5
+  models:
+    - name: deepseek-v4-flash
+      weight: 1.0
+  evaluator_models:
+    - name: deepseek-v4-flash
+      weight: 1.0
+
+prompt:
+  # Use bundled prompt templates from openevolve package.
+  template_dir: null
+  system_message: system_message
+  evaluator_system_message: evaluator_system_message
+  num_top_programs: 3
+  num_diverse_programs: 2
+  use_template_stochasticity: true
+
+database:
+  in_memory: true
+  log_prompts: true
+  population_size: 128
+  archive_size: 32
+  num_islands: 4
+  elite_selection_ratio: 0.2
+  exploration_ratio: 0.3
+  exploitation_ratio: 0.5
+  # Must match metrics emitted by evaluate_firecastrl_reward.py
+  feature_dimensions: ["best_true_reward", "stability"]
+  feature_bins: 8
+  random_seed: 42
+
+evaluator:
+  timeout: 1800
+  max_retries: 1
+  parallel_evaluations: 1
+  cascade_evaluation: true
+  # Firecastrl reward scores are often negative; default thresholds (0.5/0.75/0.9) are not suitable.
+  cascade_thresholds: [-5000.0, -3000.0]
+  use_llm_feedback: false
+
+evolution_trace:
+  enabled: true
+  format: jsonl
+  include_code: false
+  include_prompts: true
+
+diff_based_evolution: true
+max_code_length: 12000
+early_stopping_patience: 8
+early_stopping_metric: combined_score
+convergence_threshold: 0.0001
