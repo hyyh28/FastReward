@@ -8,7 +8,7 @@ from openevolve.api import run_evolution
 def parse_args():
     parser = argparse.ArgumentParser(description="Run OpenEvolve reward search for firecastrl.")
     parser.add_argument("--config", type=str, required=True, help="Path to OpenEvolve YAML config.")
-    parser.add_argument("--iterations", type=int, default=20)
+    parser.add_argument("--iterations", type=int, default=10)
     parser.add_argument("--output-dir", type=str, default="logs/openevolve_firecastrl")
     parser.add_argument("--allocation-strategy", choices=["uniform", "ocba"], default="uniform")
     parser.add_argument("--total-eval-budget", type=int, default=220_000)

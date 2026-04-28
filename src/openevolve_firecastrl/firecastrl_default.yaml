@@ -21,20 +21,70 @@ llm:
       weight: 1.0
 
 prompt:
-  # Use bundled prompt templates from openevolve package.
+  # Task-specific prompt for firecastrl reward-function search.
   template_dir: null
-  system_message: system_message
+  system_message: |
+    You are optimizing a Python reward function for wildfire suppression RL.
+    Output valid Python edits that only target the function:
+      initial_reward_function(env, prev_state, curr_state) -> float
+
+    Task context:
+    - Environment: firecastrl/Wildfire-env0.
+    - Agent: a helicopter moving on a 2D grid and spraying water to suppress fire.
+    - Action semantics: 0=down, 1=up, 2=left, 3=right, 4=spray.
+    - State signals exposed to the reward function:
+      * cells_burning: current count of burning cells
+      * cells_burnt: current count of burnt-out cells
+      * helicopter_coord: helicopter position
+      * quenched_cells: cells extinguished by recent action
+    - Episode semantics:
+      * terminated when all fires are extinguished (cells_burning == 0)
+      * truncated when max timesteps is reached (default 2000)
+    - Baseline environment reward intuition:
+      * reward extinguishing actions
+      * penalize ongoing burning burden and wasted/ineffective suppression
+      * include a small per-step efficiency penalty
+    - Optimization objective in evolution (intuitive):
+      * True task improvement: after training with your reward, the agent should perform better
+        under the environment's original reward, meaning it actually suppresses wildfire more effectively
+        rather than only scoring well on shaped reward.
+      * Robust behavior: performance should be stable across different random seeds/runs,
+        not "good in one run but collapse in another".
+      * No reward hacking: reject reward designs that exploit shortcuts (e.g., inflating shaped reward
+        without reducing wildfire damage in true evaluation).
+
+    Task constraints:
+    - Keep the function deterministic, numerically stable, and lightweight.
+    - Use only these state keys: cells_burning, cells_burnt, helicopter_coord, quenched_cells.
+    - Do not change function signature, imports, class structures, or unrelated code.
+    - Do not add file I/O, network calls, randomness, sleeps, subprocesses, or heavy computation.
+    - Return a finite float on every path.
+
+    Domain guidance:
+    - Prefer smooth shaping terms over brittle hard thresholds.
+    - Reward fire suppression progress (quenched_cells, reduction in cells_burning trend).
+    - Penalize worsening fire dynamics (growth in burning/burnt burden over time).
+    - Respect the role of action=4 (spray): reward should encourage effective spray usage,
+      not blind movement-only strategies.
+    - Avoid extreme coefficient scales that destabilize PPO updates.
+    - Keep code concise and readable.
+
+    Improvement strategy:
+    - Propose small, testable coefficient or term changes per iteration.
+    - Preserve parts that already correlate with higher best_true_reward and stability.
+    - If introducing nonlinear terms, keep them bounded and simple.
   evaluator_system_message: evaluator_system_message
   num_top_programs: 3
-  num_diverse_programs: 2
-  use_template_stochasticity: true
+  num_diverse_programs: 1
+  use_template_stochasticity: false
+  suggest_simplification_after_chars: 900
 
 database:
   in_memory: true
   log_prompts: true
   population_size: 128
   archive_size: 32
-  num_islands: 4
+  num_islands: 2
   elite_selection_ratio: 0.2
   exploration_ratio: 0.3
   exploitation_ratio: 0.5
@@ -44,7 +94,8 @@ database:
   random_seed: 42
 
 evaluator:
-  timeout: 1800
+  # One candidate evaluation may take ~10h (two training groups), keep extra margin.
+  timeout: 43200
   max_retries: 1
   parallel_evaluations: 1
   cascade_evaluation: true
