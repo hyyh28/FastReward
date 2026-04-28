@@ -4,3 +4,4 @@
 src/.DS_Store
 /src/__pycache__
 *.pyc
+.cursor/*
