@@ -10,7 +10,7 @@ def parse_args():
     parser.add_argument("--config", type=str, required=True, help="Path to OpenEvolve YAML config.")
     parser.add_argument("--iterations", type=int, default=20)
     parser.add_argument("--output-dir", type=str, default="logs/openevolve_firecastrl")
-    parser.add_argument("--allocation-strategy", choices=["uniform", "ocba"], default="ocba")
+    parser.add_argument("--allocation-strategy", choices=["uniform", "ocba"], default="uniform")
     parser.add_argument("--total-eval-budget", type=int, default=220_000)
     parser.add_argument("--warmup-budget-per-arm", type=int, default=50_000)
     parser.add_argument("--delta-budget", type=int, default=15_000)
