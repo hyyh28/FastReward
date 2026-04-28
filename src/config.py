@@ -7,7 +7,7 @@ class ExperimentConfig:
     candidates: List[str]
     total_budget: int = 3_600_000
     # 4 个候选时: 4 * 300_000 = 1_200_000 = total_budget / 3
-    warmup_budget_per_candidate: int = 300_000
+    warmup_budget_per_candidate: int = 200_000
     delta_budget_per_round: int = 32_768
     n_envs: int = 16
     n_steps: int = 16

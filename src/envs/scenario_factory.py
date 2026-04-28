@@ -1,6 +1,7 @@
 import gymnasium as gym
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+from firecastrl_env import
 
 from src.envs.reward_wrapper import MountainCarRewardWrapper
 
