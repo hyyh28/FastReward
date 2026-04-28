@@ -1,7 +1,7 @@
 import gymnasium as gym
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
-from firecastrl_env import
+import firecastrl_env
 
 from src.envs.reward_wrapper import MountainCarRewardWrapper
 
@@ -22,3 +22,8 @@ class MountainCarScenarioFactory:
         if obs_rms is not None:
             vec_env.obs_rms = obs_rms.copy()
         return vec_env
+
+
+class FirecastrlFactory:
+    def __init__(self, gamma: float):
+        self.gamma = gamma
