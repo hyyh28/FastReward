@@ -6,6 +6,7 @@ import firecastrl_env
 from firecastrl_env.wrappers import CustomRewardWrapper, CellObservationWrapper
 from firecastrl_env.envs.environment.enums import FireState
 from src.envs.reward_wrapper import MountainCarRewardWrapper
+from src.envs.frozenlake_reward_wrapper import FrozenLakeRewardWrapper
 from src.envs.firecastrl_reward_init import initial_reward_function
 
 
@@ -124,3 +125,24 @@ class FirecastrlFactory:
         if vec_env_type.lower() == "dummy":
             return DummyVecEnv(env_fns)
         raise ValueError(f"Unsupported vec_env_type: {vec_env_type}. Use 'subproc' or 'dummy'.")
+
+
+class FrozenLakeScenarioFactory:
+    def __init__(self, gamma: float):
+        self.gamma = gamma
+
+    def make_vec_env(
+        self,
+        shaping_type: str,
+        n_envs: int,
+        map_name: str = "8x8",
+        is_slippery: bool = True,
+    ):
+        def make_env():
+            base = gym.make("FrozenLake-v1", map_name=map_name, is_slippery=is_slippery)
+            if shaping_type == "true_env":
+                return Monitor(base)
+            wrapped = FrozenLakeRewardWrapper(base, shaping_type=shaping_type, gamma=self.gamma)
+            return Monitor(wrapped)
+
+        return DummyVecEnv([make_env for _ in range(n_envs)])

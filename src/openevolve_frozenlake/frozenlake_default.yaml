@@ -1,0 +1,104 @@
+max_iterations: 30
+checkpoint_interval: 5
+log_level: INFO
+random_seed: 42
+file_suffix: ".py"
+
+llm:
+  api_base: https://api.deepseek.com/v1
+  api_key: ${DEEPSEEK_API_KEY}
+  temperature: 0.7
+  max_tokens: 4096
+  timeout: 90
+  retries: 3
+  retry_delay: 5
+  models:
+    - name: deepseek-v4-flash
+      weight: 1.0
+  evaluator_models:
+    - name: deepseek-v4-flash
+      weight: 1.0
+
+prompt:
+  template_dir: null
+  system_message: |
+    You are optimizing a Python reward function for FrozenLake RL.
+    Output valid Python edits that only target the function:
+      initial_reward_function(env, prev_state, curr_state) -> float
+
+    Task context:
+    - Environment: FrozenLake-v1 (Gymnasium), discrete grid world.
+    - Action semantics: 0=left, 1=down, 2=right, 3=up.
+    - The evaluated policy is PPO with discrete observations/actions.
+    - State signals exposed to the reward function:
+      * state
+      * row, col
+      * nrows, ncols
+      * goal_row, goal_col
+      * manhattan_to_goal
+      * delta_manhattan
+      * on_goal
+      * fell_in_hole
+      * terminated
+      * truncated
+    - Episode semantics:
+      * success on goal tile (on_goal == 1.0)
+      * failure on hole tile (fell_in_hole == 1.0)
+      * may truncate by time limit
+    - Baseline environment reward intuition:
+      * sparse true reward: mostly 0, 1 on reaching goal.
+    - Optimization objective in evolution:
+      * improve true task performance under original environment reward.
+      * keep behavior robust across random seeds.
+      * avoid reward hacking that boosts shaped reward but not success rate.
+
+    Task constraints:
+    - Keep the function deterministic, numerically stable, and lightweight.
+    - Use only the listed state keys.
+    - Do not change function signature, imports, class structures, or unrelated code.
+    - Do not add file I/O, network calls, randomness, sleeps, subprocesses, or heavy computation.
+    - Return a finite float on every path.
+
+    Domain guidance:
+    - Encourage consistent progress toward the goal.
+    - Penalize terminal failures and wandering.
+    - Keep scales moderate to avoid destabilizing PPO.
+    - Prefer smooth shaping over brittle hard thresholds.
+  evaluator_system_message: evaluator_system_message
+  num_top_programs: 3
+  num_diverse_programs: 1
+  use_template_stochasticity: false
+  suggest_simplification_after_chars: 900
+
+database:
+  in_memory: true
+  log_prompts: true
+  population_size: 128
+  archive_size: 32
+  num_islands: 2
+  elite_selection_ratio: 0.2
+  exploration_ratio: 0.3
+  exploitation_ratio: 0.5
+  feature_dimensions: ["best_true_reward", "stability"]
+  feature_bins: 8
+  random_seed: 42
+
+evaluator:
+  timeout: 20000
+  max_retries: 1
+  parallel_evaluations: 1
+  cascade_evaluation: true
+  cascade_thresholds: [0.25, 0.55]
+  use_llm_feedback: false
+
+evolution_trace:
+  enabled: true
+  format: jsonl
+  include_code: false
+  include_prompts: true
+
+diff_based_evolution: true
+max_code_length: 12000
+early_stopping_patience: 8
+early_stopping_metric: combined_score
+convergence_threshold: 0.0001

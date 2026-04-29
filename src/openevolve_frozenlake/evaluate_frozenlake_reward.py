@@ -5,7 +5,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from types import ModuleType
 
-from src.openevolve_firecastrl.candidate_allocator_eval import CandidateAllocatorEvaluator, CandidateEvalConfig
+from src.openevolve_frozenlake.candidate_allocator_eval import (
+    CandidateAllocatorEvaluator,
+    CandidateEvalConfig,
+)
 
 
 def _load_candidate_module(program_path: str) -> ModuleType:
@@ -31,17 +34,25 @@ def _build_eval_config(
     strategy_name: str,
     seed_offset: int = 0,
 ) -> CandidateEvalConfig:
-    n_arms = int(os.getenv("FIRECASTRL_EVAL_ARMS", "2"))
-    n_envs = int(os.getenv("FIRECASTRL_EVAL_N_ENVS", "1"))
-    spray_radius = int(os.getenv("FIRECASTRL_SPRAY_RADIUS", "5"))
-    base_seed = int(os.getenv("FIRECASTRL_EVAL_SEED", "42")) + seed_offset
-    base_total_budget = int(os.getenv("FIRECASTRL_TOTAL_BUDGET", "220000"))
-    base_warmup = int(os.getenv("FIRECASTRL_WARMUP_BUDGET_PER_ARM", "50000"))
-    base_delta = int(os.getenv("FIRECASTRL_DELTA_BUDGET", "15000"))
-    n_steps = int(os.getenv("FIRECASTRL_N_STEPS", "512"))
-    batch_size = int(os.getenv("FIRECASTRL_BATCH_SIZE", "128"))
-    n_epochs = int(os.getenv("FIRECASTRL_N_EPOCHS", "3"))
-    n_eval_episodes = int(os.getenv("FIRECASTRL_N_EVAL_EPISODES", "2"))
+    n_arms = int(os.getenv("FROZENLAKE_EVAL_ARMS", "4"))
+    n_envs = int(os.getenv("FROZENLAKE_EVAL_N_ENVS", "4"))
+    map_name = os.getenv("FROZENLAKE_MAP_NAME", "4x4")
+    is_slippery = os.getenv("FROZENLAKE_IS_SLIPPERY", "true").strip().lower() == "true"
+    base_seed = int(os.getenv("FROZENLAKE_EVAL_SEED", "42")) + seed_offset
+    base_total_budget = int(os.getenv("FROZENLAKE_TOTAL_BUDGET", "120000"))
+    base_warmup = int(os.getenv("FROZENLAKE_WARMUP_BUDGET_PER_ARM", "6000"))
+    base_delta = int(os.getenv("FROZENLAKE_DELTA_BUDGET", "3000"))
+    n_steps = int(os.getenv("FROZENLAKE_N_STEPS", "256"))
+    batch_size = int(os.getenv("FROZENLAKE_BATCH_SIZE", "64"))
+    n_epochs = int(os.getenv("FROZENLAKE_N_EPOCHS", "4"))
+    n_eval_episodes = int(os.getenv("FROZENLAKE_N_EVAL_EPISODES", "60"))
+    early_stop_enable = os.getenv("FROZENLAKE_EARLY_STOP_ENABLE", "true").strip().lower() == "true"
+    early_stop_z = float(os.getenv("FROZENLAKE_EARLY_STOP_Z", "1.96"))
+    early_stop_margin = float(os.getenv("FROZENLAKE_EARLY_STOP_MARGIN", "0.01"))
+    min_rounds_before_stop = int(os.getenv("FROZENLAKE_MIN_ROUNDS_BEFORE_STOP", "2"))
+    elimination_enable = os.getenv("FROZENLAKE_ELIMINATION_ENABLE", "true").strip().lower() == "true"
+    elimination_z = float(os.getenv("FROZENLAKE_ELIMINATION_Z", "1.0"))
+    min_active_arms = int(os.getenv("FROZENLAKE_MIN_ACTIVE_ARMS", "2"))
 
     total_budget = max(int(base_total_budget * stage_scale), n_envs * n_steps)
     warmup_budget = max(int(base_warmup * stage_scale), n_envs * n_steps)
@@ -51,7 +62,6 @@ def _build_eval_config(
         strategy_name=strategy_name,
         n_arms=n_arms,
         n_envs=n_envs,
-        spray_radius=spray_radius,
         seed=base_seed,
         total_budget=total_budget,
         warmup_budget_per_arm=warmup_budget,
@@ -60,13 +70,24 @@ def _build_eval_config(
         batch_size=batch_size,
         n_epochs=n_epochs,
         n_eval_episodes=n_eval_episodes,
+        map_name=map_name,
+        is_slippery=is_slippery,
+        early_stop_enable=early_stop_enable,
+        early_stop_z=early_stop_z,
+        early_stop_margin=early_stop_margin,
+        min_rounds_before_stop=min_rounds_before_stop,
+        elimination_enable=elimination_enable,
+        elimination_z=elimination_z,
+        min_active_arms=min_active_arms,
     )
 
 
 def _strategy_mode() -> str:
-    mode = os.getenv("FIRECASTRL_ALLOC_STRATEGY", "both").strip().lower()
-    if mode not in {"both", "ocba", "uniform"}:
-        return "both"
+    mode = os.getenv("FROZENLAKE_ALLOC_STRATEGY", "ocba").strip().lower()
+    if mode == "both":
+        return "ocba"
+    if mode not in {"ocba", "uniform"}:
+        return "ocba"
     return mode
 
 
@@ -87,7 +108,7 @@ def _run_single_strategy(
 
 
 def _append_compare_log(payload: dict) -> None:
-    compare_log = os.getenv("FIRECASTRL_COMPARE_LOG", "").strip()
+    compare_log = os.getenv("FROZENLAKE_COMPARE_LOG", "").strip()
     if not compare_log:
         return
     log_path = Path(compare_log)
@@ -106,7 +127,7 @@ def _evaluate(program_path: str, stage_scale: float, seed_offset: int = 0) -> di
         if mode in {"both", "ocba"}:
             strategy_metrics["ocba"] = _run_single_strategy(
                 reward_fn=reward_fn,
-                strategy_name="ocba",
+                strategy_name="improved_ocba",
                 stage_scale=stage_scale,
                 seed_offset=seed_offset + 1_000,
             )
@@ -165,7 +186,6 @@ def _evaluate(program_path: str, stage_scale: float, seed_offset: int = 0) -> di
                 ),
             }
         else:
-            # Keep compatibility when explicitly requesting single strategy.
             single_name = "ocba" if "ocba" in strategy_metrics else "uniform"
             single_metrics = strategy_metrics[single_name]
             metrics = dict(single_metrics)
