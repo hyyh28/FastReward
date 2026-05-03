@@ -76,6 +76,7 @@ def summarize(records: list[dict], z: float) -> dict:
     uniform_early_stop = []
 
     per_candidate_rows = []
+    per_iteration = {}
 
     for rec in records:
         ocba = rec.get("ocba", {}) or {}
@@ -103,6 +104,8 @@ def summarize(records: list[dict], z: float) -> dict:
 
         per_candidate_rows.append(
             {
+                "iteration": int(rec.get("iteration", -1)),
+                "candidate_id": str(rec.get("candidate_id", "")),
                 "program_path": str(rec.get("program_path", "")),
                 "ocba_budget_used": ocba_b,
                 "uniform_budget_used": uniform_b,
@@ -118,12 +121,38 @@ def summarize(records: list[dict], z: float) -> dict:
                 "uniform_early_stop_triggered": int(uniform_es > 0.5),
             }
         )
+        it = int(rec.get("iteration", -1))
+        if it not in per_iteration:
+            per_iteration[it] = {
+                "delta_budget": [],
+                "save_ratio": [],
+                "delta_score": [],
+                "delta_best": [],
+            }
+        per_iteration[it]["delta_budget"].append(d_b)
+        per_iteration[it]["save_ratio"].append(save_ratio)
+        per_iteration[it]["delta_score"].append(d_score)
+        per_iteration[it]["delta_best"].append(d_best)
 
     n = len(records)
     mean_db, low_db, high_db = _mean_ci(delta_budget, z)
     mean_sr, low_sr, high_sr = _mean_ci(delta_budget_ratio, z)
     mean_ds, low_ds, high_ds = _mean_ci(delta_score, z)
     mean_dr, low_dr, high_dr = _mean_ci(delta_best, z)
+
+    by_iteration_summary = {}
+    for it, vals in sorted(per_iteration.items(), key=lambda x: x[0]):
+        m_db, l_db, h_db = _mean_ci(vals["delta_budget"], z)
+        m_sr, l_sr, h_sr = _mean_ci(vals["save_ratio"], z)
+        m_ds, l_ds, h_ds = _mean_ci(vals["delta_score"], z)
+        m_dr, l_dr, h_dr = _mean_ci(vals["delta_best"], z)
+        by_iteration_summary[str(it)] = {
+            "n": int(len(vals["delta_budget"])),
+            "delta_budget_used_ocba_minus_uniform": {"mean": m_db, "ci_low": l_db, "ci_high": h_db},
+            "ocba_budget_save_ratio_vs_uniform": {"mean": m_sr, "ci_low": l_sr, "ci_high": h_sr},
+            "delta_combined_score_ocba_minus_uniform": {"mean": m_ds, "ci_low": l_ds, "ci_high": h_ds},
+            "delta_best_true_reward_ocba_minus_uniform": {"mean": m_dr, "ci_low": l_dr, "ci_high": h_dr},
+        }
 
     return {
         "n_candidates": n,
@@ -151,6 +180,7 @@ def summarize(records: list[dict], z: float) -> dict:
         "uniform_budget_used_mean": float(np.mean(np.array(uniform_budget, dtype=np.float64))) if n else 0.0,
         "ocba_early_stop_rate": float(np.mean(np.array(ocba_early_stop, dtype=np.float64))) if n else 0.0,
         "uniform_early_stop_rate": float(np.mean(np.array(uniform_early_stop, dtype=np.float64))) if n else 0.0,
+        "by_iteration": by_iteration_summary,
         "per_candidate_rows": per_candidate_rows,
     }
 
@@ -160,6 +190,8 @@ def maybe_write_csv(path: Path | None, rows: list[dict]) -> None:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = [
+        "iteration",
+        "candidate_id",
         "program_path",
         "ocba_budget_used",
         "uniform_budget_used",

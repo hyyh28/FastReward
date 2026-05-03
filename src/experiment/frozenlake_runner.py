@@ -20,6 +20,8 @@ class FrozenLakeExperimentRunner:
                 n_envs=config.n_envs,
                 map_name=config.map_name,
                 is_slippery=config.is_slippery,
+                vec_env_type=config.vec_env_type,
+                seed=config.vec_env_seed,
             )
             for c in config.candidates
         ]
@@ -48,6 +50,8 @@ class FrozenLakeExperimentRunner:
             n_envs=1,
             map_name=self.cfg.map_name,
             is_slippery=self.cfg.is_slippery,
+            vec_env_type="dummy",
+            seed=self.cfg.vec_env_seed,
         )
         mean_r, std_r = evaluate_policy(
             self.models[idx], eval_env, n_eval_episodes=self.cfg.n_eval_episodes_true, warn=False
@@ -61,6 +65,8 @@ class FrozenLakeExperimentRunner:
             n_envs=1,
             map_name=self.cfg.map_name,
             is_slippery=self.cfg.is_slippery,
+            vec_env_type="dummy",
+            seed=self.cfg.vec_env_seed,
         )
         mean_r, _ = evaluate_policy(
             self.models[idx], eval_env, n_eval_episodes=self.cfg.n_eval_episodes_shaped, warn=False

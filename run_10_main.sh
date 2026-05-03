@@ -6,9 +6,9 @@ set -euo pipefail
 #   bash run_10_main.sh
 #   JOBS=10 PYTHON_BIN=python3 bash run_10_main.sh
 
-JOBS="${JOBS:-10}"
+JOBS="${JOBS:-5}"
 PYTHON_BIN="${PYTHON_BIN:-python}"
-ENTRY_MODULE="${ENTRY_MODULE:-src.main}"
+ENTRY_MODULE="${ENTRY_MODULE:-src.main_frozenlake}"
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT_DIR"

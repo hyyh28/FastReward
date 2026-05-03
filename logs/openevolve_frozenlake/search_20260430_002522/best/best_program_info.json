@@ -1,0 +1,27 @@
+{
+  "id": "b4df0905-8eac-4b44-a953-d8508258de10",
+  "generation": 0,
+  "iteration": 0,
+  "timestamp": 1777480085.5736382,
+  "parent_id": null,
+  "metrics": {
+    "combined_score": 9.840924049326647,
+    "best_true_reward": 0.06666666666666667,
+    "avg_true_reward": 0.024999999999999998,
+    "stability": 0.976800738265998,
+    "budget_efficiency": 1.007996774410322,
+    "budget_used": 119048.0,
+    "round_count": 32.0,
+    "active_arms_final": 2.0,
+    "early_stop_triggered": 0.0,
+    "valid": 1.0,
+    "selected_strategy": 1.0,
+    "stage_scale": 1.0,
+    "comparison_mode": 1.0,
+    "stage1_passed": 1.0,
+    "stage2_passed": 1.0,
+    "stage3_passed": 1.0
+  },
+  "language": "python",
+  "saved_at": 1777480342.3544972
+}

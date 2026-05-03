@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 from pathlib import Path
 
@@ -42,6 +43,12 @@ def parse_args():
         default="artifacts/best_frozenlake_reward_candidate.py",
         help="Where to save the best evolved reward program code.",
     )
+    parser.add_argument(
+        "--export-candidates-manifest",
+        type=str,
+        default="",
+        help="Optional manifest jsonl path for exporting per-iteration candidate programs.",
+    )
     return parser.parse_args()
 
 
@@ -66,6 +73,91 @@ def _set_eval_env(args) -> None:
     os.environ["FROZENLAKE_ELIMINATION_ENABLE"] = "true" if args.elimination_enable else "false"
     os.environ["FROZENLAKE_ELIMINATION_Z"] = str(args.elimination_z)
     os.environ["FROZENLAKE_MIN_ACTIVE_ARMS"] = str(args.min_active_arms)
+
+
+def _extract_code_from_program_json(payload: dict) -> str:
+    candidate_keys = (
+        "code",
+        "program_code",
+        "source_code",
+        "program",
+        "content",
+        "text",
+        "response",
+        "raw_output",
+    )
+    for key in candidate_keys:
+        value = payload.get(key)
+        if isinstance(value, str) and "def initial_reward_function" in value:
+            return value
+    for key in ("program", "candidate", "result"):
+        value = payload.get(key)
+        if isinstance(value, dict):
+            nested = _extract_code_from_program_json(value)
+            if nested:
+                return nested
+    return ""
+
+
+def _safe_iteration(value) -> int:
+    try:
+        return int(value)
+    except Exception:
+        return -1
+
+
+def _parse_iteration_from_path(program_json: Path) -> int:
+    for ancestor in [program_json.parent, *program_json.parents]:
+        name = ancestor.name
+        if name.startswith("checkpoint_"):
+            try:
+                return int(name.split("_", 1)[1])
+            except Exception:
+                continue
+    return -1
+
+
+def _export_candidates_manifest(output_dir: Path, manifest_path: Path) -> tuple[int, int, int]:
+    program_jsons = sorted(output_dir.rglob("programs/*.json"))
+    export_dir = manifest_path.parent / "manifest_candidates"
+    export_dir.mkdir(parents=True, exist_ok=True)
+
+    exported = 0
+    decode_failed = 0
+    no_code_found = 0
+    with manifest_path.open("w", encoding="utf-8") as mf:
+        for idx, program_json in enumerate(program_jsons):
+            try:
+                payload = json.loads(program_json.read_text(encoding="utf-8"))
+            except Exception:
+                decode_failed += 1
+                continue
+            code = _extract_code_from_program_json(payload)
+            if not code:
+                no_code_found += 1
+                continue
+            candidate_id = str(
+                payload.get("id")
+                or payload.get("program_id")
+                or payload.get("uuid")
+                or program_json.stem
+            )
+            iteration = _safe_iteration(payload.get("iteration"))
+            if iteration < 0:
+                iteration = _parse_iteration_from_path(program_json)
+            out_py = export_dir / f"iter_{int(iteration):04d}_{candidate_id}.py"
+            out_py.write_text(code, encoding="utf-8")
+            rec = {
+                "index": idx,
+                "iteration": int(iteration),
+                "candidate_id": candidate_id,
+                "program_path": str(out_py),
+                "source_json_path": str(program_json),
+                "source_run_dir": str(output_dir),
+            }
+            mf.write(json.dumps(rec, ensure_ascii=True) + "\n")
+            exported += 1
+    return exported, len(program_jsons), decode_failed + no_code_found
 
 
 def main():
@@ -104,6 +196,21 @@ def main():
     print(f"metrics={result.metrics}")
     print(f"best_program_saved={save_best_path}")
     print(f"output_dir={output_dir}")
+    manifest_arg = args.export_candidates_manifest.strip()
+    if manifest_arg:
+        manifest_path = Path(manifest_arg)
+    else:
+        manifest_path = output_dir / "candidate_manifest.jsonl"
+    if not manifest_path.is_absolute():
+        manifest_path = project_root / manifest_path
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    exported_count, discovered_count, skipped_count = _export_candidates_manifest(
+        output_dir=output_dir, manifest_path=manifest_path
+    )
+    print(f"candidate_manifest={manifest_path}")
+    print(f"candidate_manifest_discovered={discovered_count}")
+    print(f"candidate_manifest_count={exported_count}")
+    print(f"candidate_manifest_skipped={skipped_count}")
 
 
 if __name__ == "__main__":

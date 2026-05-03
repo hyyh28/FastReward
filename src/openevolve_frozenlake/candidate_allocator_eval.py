@@ -1,4 +1,8 @@
+import json
 import math
+import os
+from datetime import datetime, timezone
+from pathlib import Path
 from dataclasses import dataclass
 from typing import Callable
 
@@ -103,6 +107,7 @@ class CandidateAllocatorEvaluator:
         active_mask = np.ones(self.cfg.n_arms, dtype=bool)
         consumed_budget = 0
         early_stop_triggered = False
+        round_records: list[dict] = []
 
         try:
             for arm_idx in range(self.cfg.n_arms):
@@ -163,8 +168,27 @@ class CandidateAllocatorEvaluator:
                     second_ucb = means[second_best] + self.cfg.early_stop_z * second_se
                     if best_lcb > second_ucb + self.cfg.early_stop_margin:
                         early_stop_triggered = True
+                        round_records.append(
+                            {
+                                "round_idx": int(round_idx),
+                                "consumed_budget_before_round": int(consumed_budget),
+                                "strategy_name": self.cfg.strategy_name,
+                                "means": [float(x) for x in means.tolist()],
+                                "variances": [float(x) for x in variances.tolist()],
+                                "active_mask": [bool(x) for x in active_mask.tolist()],
+                                "allocations": [0 for _ in range(self.cfg.n_arms)],
+                                "best_idx": int(best),
+                                "second_best_idx": int(second_best),
+                                "best_lcb": float(best_lcb),
+                                "second_ucb": float(second_ucb),
+                                "early_stop": True,
+                                "eliminated_arms": [],
+                                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                            }
+                        )
                         break
 
+                eliminated_arms: list[int] = []
                 if self.cfg.elimination_enable:
                     active_indices = np.where(active_mask)[0]
                     if active_indices.size > self.cfg.min_active_arms:
@@ -181,6 +205,7 @@ class CandidateAllocatorEvaluator:
                             if arm_ucb < best_lcb and np.count_nonzero(active_mask) - eliminated > self.cfg.min_active_arms:
                                 active_mask[arm_idx] = False
                                 eliminated += 1
+                                eliminated_arms.append(int(arm_idx))
 
                 max_alloc = (remaining // self.cfg.update_unit) * self.cfg.update_unit
                 if max_alloc <= 0:
@@ -213,6 +238,22 @@ class CandidateAllocatorEvaluator:
                             progress_bar=True,
                         )
 
+                round_records.append(
+                    {
+                        "round_idx": int(round_idx),
+                        "consumed_budget_before_round": int(consumed_budget),
+                        "consumed_budget_after_round": int(consumed_budget + np.sum(allocations)),
+                        "strategy_name": self.cfg.strategy_name,
+                        "means": [float(x) for x in means.tolist()],
+                        "variances": [float(x) for x in variances.tolist()],
+                        "active_mask": [bool(x) for x in active_mask.tolist()],
+                        "allocations": [int(x) for x in allocations.tolist()],
+                        "best_idx": int(best_idx),
+                        "early_stop": False,
+                        "eliminated_arms": eliminated_arms,
+                        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                    }
+                )
                 consumed_budget += int(np.sum(allocations))
                 round_idx += 1
 
@@ -250,5 +291,17 @@ class CandidateAllocatorEvaluator:
                 "valid": 1.0,
             }
         finally:
+            trace_path = os.getenv("FROZENLAKE_ROUND_TRACE_PATH", "").strip()
+            trace_tag = os.getenv("FROZENLAKE_TRACE_TAG", "").strip()
+            if trace_path and round_records:
+                out_path = Path(trace_path)
+                out_path.parent.mkdir(parents=True, exist_ok=True)
+                with out_path.open("a", encoding="utf-8") as f:
+                    for rec in round_records:
+                        payload = dict(rec)
+                        payload["trace_tag"] = trace_tag
+                        payload["seed"] = int(run_seed)
+                        payload["n_eval_episodes"] = int(self.cfg.n_eval_episodes)
+                        f.write(json.dumps(payload, ensure_ascii=True) + "\n")
             for env in train_envs:
                 env.close()

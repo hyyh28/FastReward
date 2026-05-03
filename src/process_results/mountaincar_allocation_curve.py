@@ -15,6 +15,38 @@ CANDIDATE_COLORS = {
     "assist_energy_gate": "tab:green",
     "deceptive_left": "tab:red",
 }
+STRATEGIES = [
+    {
+        "key": "uniform",
+        "filename": "uniform_rounds.jsonl",
+        "line_label": "Uniform Allocation",
+        "ci_label": "Uniform 95% CI",
+        "color": "#B08A72",
+        "fill": "#D9CBC0",
+        "linestyle": "--",
+        "linewidth": 1.4,
+    },
+    {
+        "key": "ocba",
+        "filename": "ocba_rounds.jsonl",
+        "line_label": "OCBA Allocation",
+        "ci_label": "OCBA 95% CI",
+        "color": "#6E8FA8",
+        "fill": "#CAD6DF",
+        "linestyle": "-",
+        "linewidth": 1.4,
+    },
+    {
+        "key": "adapted_ocba",
+        "filename": "adapted_ocba_rounds.jsonl",
+        "line_label": "Adaptive OCBA Allocation",
+        "ci_label": "Adaptive OCBA 95% CI",
+        "color": "#4F7089",
+        "fill": "#B9CAD6",
+        "linestyle": "-.",
+        "linewidth": 1.4,
+    },
+]
 
 
 def read_round_curve(jsonl_path: Path):
@@ -117,9 +149,20 @@ def aggregate_glyph_data(run_dirs, strategy_filename, max_budget=None):
     return glyph
 
 
-def aggregate_curves(curves, max_budget=None):
+def _trim_extremes(vals: np.ndarray, trim_count: int) -> np.ndarray:
+    if vals.size == 0 or trim_count <= 0:
+        return vals
+    if vals.size <= 2 * trim_count:
+        return vals
+    vals_sorted = np.sort(vals)
+    return vals_sorted[trim_count:-trim_count]
+
+
+def aggregate_curves(curves, max_budget=None, min_budget=None, trim_count: int = 0, warmup_budget: int = 800_000):
     # 按 budget(steps) 对齐，支持不同 run 的长度不一致
     all_steps = sorted({s for steps, _, _ in curves for s in steps})
+    if min_budget is not None:
+        all_steps = [s for s in all_steps if s >= int(min_budget)]
     if max_budget is not None:
         all_steps = [s for s in all_steps if s <= int(max_budget)]
     step_to_values = {s: [] for s in all_steps}
@@ -135,6 +178,7 @@ def aggregate_curves(curves, max_budget=None):
     n = []
     for s in all_steps:
         vals = np.array(step_to_values[s], dtype=np.float64)
+        vals = _trim_extremes(vals, trim_count=trim_count)
         if vals.size == 0:
             continue
         m = float(np.mean(vals))
@@ -143,7 +187,7 @@ def aggregate_curves(curves, max_budget=None):
             ci = 1.96 * sem
         else:
             ci = 0.0
-        x.append(int(s))
+        x.append(int(s) - int(warmup_budget))
         mean.append(m)
         low.append(m - ci)
         high.append(m + ci)
@@ -191,101 +235,128 @@ def draw_point_glyph_bars(ax, x, y, glyph_data, glyph_total_height, bar_width):
             bottom += h
 
 
-def build_aggregate_plot(run_dirs, output_path: Path, smooth_weight=0.6, max_budget=3_000_000):
-    uniform_curves = load_strategy_curves(run_dirs, "uniform_rounds.jsonl")
-    ocba_curves = load_strategy_curves(run_dirs, "ocba_rounds.jsonl")
-    uniform_glyph = aggregate_glyph_data(run_dirs, "uniform_rounds.jsonl", max_budget=max_budget)
-    ocba_glyph = aggregate_glyph_data(run_dirs, "ocba_rounds.jsonl", max_budget=max_budget)
+def build_aggregate_plot(
+    run_dirs,
+    output_path: Path,
+    smooth_weight=0.6,
+    min_budget=1_500_000,
+    max_budget=3_000_000,
+    trim_extremes_count: int = 0,
+    warmup_budget: int = 800_000,
+):
+    plotted = []
+    for strategy in STRATEGIES:
+        try:
+            curves = load_strategy_curves(run_dirs, strategy["filename"])
+        except FileNotFoundError:
+            continue
+        glyph = aggregate_glyph_data(run_dirs, strategy["filename"], max_budget=max_budget)
+        x, mean, low, high, n = aggregate_curves(
+            curves,
+            max_budget=max_budget,
+            min_budget=min_budget,
+            trim_count=trim_extremes_count,
+            warmup_budget=warmup_budget,
+        )
+        plotted.append(
+            {
+                "strategy": strategy,
+                "curves": curves,
+                "glyph": glyph,
+                "x": x,
+                "mean_s": ema_smooth(mean, weight=smooth_weight),
+                "low_s": ema_smooth(low, weight=smooth_weight),
+                "high_s": ema_smooth(high, weight=smooth_weight),
+                "n": n,
+            }
+        )
+    if not plotted:
+        expected = ", ".join([s["filename"] for s in STRATEGIES])
+        raise FileNotFoundError(f"No strategy jsonl files found. Expected one of: {expected}")
 
-    x_u, m_u, l_u, h_u, n_u = aggregate_curves(uniform_curves, max_budget=max_budget)
-    x_o, m_o, l_o, h_o, n_o = aggregate_curves(ocba_curves, max_budget=max_budget)
-    m_u_s = ema_smooth(m_u, weight=smooth_weight)
-    l_u_s = ema_smooth(l_u, weight=smooth_weight)
-    h_u_s = ema_smooth(h_u, weight=smooth_weight)
-    m_o_s = ema_smooth(m_o, weight=smooth_weight)
-    l_o_s = ema_smooth(l_o, weight=smooth_weight)
-    h_o_s = ema_smooth(h_o, weight=smooth_weight)
-
-    plt.figure(figsize=(10, 6))
-    plt.plot(
-        x_u,
-        m_u_s,
-        label="Uniform Allocation (mean)",
-        linestyle="--",
-        linewidth=2,
-        color="tab:blue",
+    # Nature-like minimalist plotting style.
+    plt.rcParams.update(
+        {
+            "font.family": "Times New Roman",
+            "font.size": 8,
+            "axes.labelsize": 9,
+            "axes.titlesize": 8,
+            "legend.fontsize": 8,
+            "xtick.labelsize": 7,
+            "ytick.labelsize": 7,
+            "axes.linewidth": 0.8,
+            "xtick.major.width": 0.8,
+            "ytick.major.width": 0.8,
+            "xtick.major.size": 3.0,
+            "ytick.major.size": 3.0,
+        }
     )
-    plt.fill_between(x_u, l_u_s, h_u_s, color="tab:blue", alpha=0.18, label="Uniform 95% CI")
-    plt.plot(
-        x_o,
-        m_o_s,
-        label="OCBA Allocation (mean)",
-        linewidth=2.5,
-        color="tab:red",
-    )
-    plt.fill_between(x_o, l_o_s, h_o_s, color="tab:red", alpha=0.18, label="OCBA 95% CI")
+    plt.figure(figsize=(3.5, 2.6))
+    for item in plotted:
+        s = item["strategy"]
+        plt.plot(
+            item["x"],
+            item["mean_s"],
+            label=s["line_label"],
+            linestyle=s["linestyle"],
+            linewidth=s["linewidth"],
+            color=s["color"],
+        )
+        plt.fill_between(
+            item["x"],
+            item["low_s"],
+            item["high_s"],
+            color=s["fill"],
+            alpha=0.65,
+            label="_nolegend_",
+        )
 
-    # mini stacked bars at each mean point:
-    # - segment size: mean cumulative budget share by candidate
-    # - segment order: average rank at this step (best on top)
-    all_x = np.unique(np.concatenate([x_u, x_o])) if len(x_u) and len(x_o) else np.array([])
-    if len(all_x) > 1:
-        min_dx = float(np.min(np.diff(all_x)))
-    else:
-        min_dx = 32000.0
-    bar_width = min_dx * 0.22
-
-    all_y = np.concatenate([m_u_s, m_o_s]) if len(m_u_s) and len(m_o_s) else np.array([-200.0, -100.0])
-    y_span = float(np.max(all_y) - np.min(all_y)) if len(all_y) else 100.0
-    glyph_total_height = max(4.0, y_span * 0.045)
-
-    draw_point_glyph_bars(plt.gca(), x_u, m_u_s, uniform_glyph, glyph_total_height=glyph_total_height, bar_width=bar_width)
-    draw_point_glyph_bars(plt.gca(), x_o, m_o_s, ocba_glyph, glyph_total_height=glyph_total_height, bar_width=bar_width)
-
-    plt.xlabel("Total Training Budget (Steps)")
-    plt.ylabel("Best Episodic Return")
-    plt.title("MountainCar: Best Return vs Total Steps with Per-Point Budget/Rank Glyphs")
-    plt.grid(alpha=0.3)
-    base_handles, base_labels = plt.gca().get_legend_handles_labels()
-    glyph_handles = [
-        plt.Line2D([0], [0], color=CANDIDATE_COLORS[c], lw=6, label=f"Glyph: {c}")
-        for c in CANDIDATES
-    ]
-    plt.legend(handles=base_handles + glyph_handles, loc="best")
+    plt.xlabel("Added Budget (Steps)", fontweight="bold")
+    plt.ylabel("Best Episodic Return", fontweight="bold")
+    ax = plt.gca()
+    ax.grid(axis="y", alpha=0.18, linestyle="-", linewidth=0.5)
+    ax.tick_params(direction="out")
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.set_ylim(bottom=-160.0)
+    plt.legend(loc="best", frameon=False, handlelength=2.0, prop={"weight": "bold", "size": 8})
     plt.tight_layout()
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(output_path, dpi=300)
     plt.close()
+    strategy_meta = {}
+    for item in plotted:
+        key = item["strategy"]["key"]
+        n_arr = item["n"]
+        strategy_meta[key] = {
+            "runs": int(len(item["curves"])),
+            "points": int(len(item["x"])),
+            "min_n": int(np.min(n_arr)) if len(n_arr) > 0 else 0,
+            "max_n": int(np.max(n_arr)) if len(n_arr) > 0 else 0,
+        }
     return {
-        "uniform_runs": len(uniform_curves),
-        "ocba_runs": len(ocba_curves),
         "max_budget": int(max_budget),
-        "uniform_points": int(len(x_u)),
-        "ocba_points": int(len(x_o)),
         "smooth_weight": float(smooth_weight),
-        "uniform_min_n": int(np.min(n_u)) if len(n_u) > 0 else 0,
-        "uniform_max_n": int(np.max(n_u)) if len(n_u) > 0 else 0,
-        "ocba_min_n": int(np.min(n_o)) if len(n_o) > 0 else 0,
-        "ocba_max_n": int(np.max(n_o)) if len(n_o) > 0 else 0,
+        "strategy_meta": strategy_meta,
     }
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Plot MountainCar OCBA/Uniform best return vs steps curve from logged jsonl files."
+        description="Plot MountainCar allocation best-return curves from logged jsonl files."
     )
     parser.add_argument(
         "--log-root",
         type=Path,
-        default=SRC_DIR / "logs" / "MountainCar",
+        default=SRC_DIR / "logs" / "MountainCar_Adaptive",
         help="Root directory containing run_* folders.",
     )
     parser.add_argument(
         "--output",
         type=Path,
         default=None,
-        help="Output image path. Default: <log_root>/ocba_vs_uniform_best_return_ci.png",
+        help="Output image path. Default: <log_root>/allocation_best_return_ci.pdf",
     )
     parser.add_argument(
         "--smooth",
@@ -294,10 +365,28 @@ def parse_args():
         help="EMA smoothing weight, TensorBoard-style (default: 0.6).",
     )
     parser.add_argument(
+        "--min-budget",
+        type=int,
+        default=800_000,
+        help="Minimum total budget(step) shown on learning curve (default: 1,500,000).",
+    )
+    parser.add_argument(
         "--max-budget",
         type=int,
         default=3_000_000,
         help="Maximum budget(step) shown on learning curve (default: 3,000,000).",
+    )
+    parser.add_argument(
+        "--trim-extremes-count",
+        type=int,
+        default=0,
+        help="Remove lowest N and highest N returns per step before aggregation (default: 0).",
+    )
+    parser.add_argument(
+        "--warmup-budget",
+        type=int,
+        default=800_000,
+        help="Warmup budget to subtract from total budget for x-axis (default: 800,000).",
     )
     return parser.parse_args()
 
@@ -306,7 +395,7 @@ def main():
     args = parse_args()
     log_root = args.log_root if args.log_root.is_absolute() else (PROJECT_ROOT / args.log_root)
     run_dirs = list_run_dirs(log_root)
-    output = args.output if args.output is not None else log_root / "ocba_vs_uniform_best_return_ci.png"
+    output = args.output if args.output is not None else log_root / "allocation_best_return_ci.pdf"
     if output is not None and not output.is_absolute():
         output = PROJECT_ROOT / output
 
@@ -314,15 +403,26 @@ def main():
         run_dirs=run_dirs,
         output_path=output,
         smooth_weight=args.smooth,
+        min_budget=args.min_budget,
         max_budget=args.max_budget,
+        trim_extremes_count=args.trim_extremes_count,
+        warmup_budget=args.warmup_budget,
     )
     print(f"Plot saved to: {output}")
+    strategy_parts = []
+    for strategy in STRATEGIES:
+        key = strategy["key"]
+        if key not in meta["strategy_meta"]:
+            continue
+        s_meta = meta["strategy_meta"][key]
+        strategy_parts.append(
+            f"{key}: runs={s_meta['runs']}, points={s_meta['points']} (n range {s_meta['min_n']}~{s_meta['max_n']})"
+        )
     print(
         "Aggregation summary: "
-        f"smooth={meta['smooth_weight']}, max_budget={meta['max_budget']}, "
-        f"uniform_runs={meta['uniform_runs']}, ocba_runs={meta['ocba_runs']}, "
-        f"uniform_points={meta['uniform_points']} (n range {meta['uniform_min_n']}~{meta['uniform_max_n']}), "
-        f"ocba_points={meta['ocba_points']} (n range {meta['ocba_min_n']}~{meta['ocba_max_n']})"
+        f"smooth={meta['smooth_weight']}, min_budget={args.min_budget}, max_budget={meta['max_budget']}, "
+        f"trim_extremes_count={args.trim_extremes_count}, warmup_budget={args.warmup_budget}; "
+        + "; ".join(strategy_parts)
     )
 
 

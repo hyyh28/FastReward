@@ -1,0 +1,98 @@
+2026-04-30 00:25:23,362 - openevolve.controller - INFO - Logging to logs/openevolve_frozenlake/search_20260430_002522/logs/openevolve_20260430_002523.log
+2026-04-30 00:25:23,362 - openevolve.controller - INFO - Set random seed to 42 for reproducibility
+2026-04-30 00:25:23,386 - openevolve.llm.openai - INFO - Initialized OpenAI LLM with model: deepseek-v4-flash
+2026-04-30 00:25:23,386 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-v4-flash (weight: 1.00)
+2026-04-30 00:25:23,392 - openevolve.prompt.sampler - INFO - Initialized prompt sampler
+2026-04-30 00:25:23,392 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-04-30 00:25:23,392 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-04-30 00:25:25,720 - openevolve.evaluator - INFO - Successfully loaded evaluation function from /home/haosheng/FastReward/src/openevolve_frozenlake/evaluate_frozenlake_reward.py
+2026-04-30 00:25:25,720 - openevolve.evaluator - INFO - Initialized evaluator with /home/haosheng/FastReward/src/openevolve_frozenlake/evaluate_frozenlake_reward.py
+2026-04-30 00:25:25,720 - openevolve.controller - INFO - Initialized OpenEvolve with /home/haosheng/FastReward/src/envs/frozenlake_reward_init.py
+2026-04-30 00:25:25,721 - openevolve.evolution_trace - INFO - Evolution tracer initialized: logs/openevolve_frozenlake/search_20260430_002522/evolution_trace.jsonl
+2026-04-30 00:25:25,721 - openevolve.controller - INFO - Evolution tracing enabled: logs/openevolve_frozenlake/search_20260430_002522/evolution_trace.jsonl
+2026-04-30 00:25:25,721 - openevolve.controller - INFO - Adding initial program to database
+2026-04-30 00:28:05,573 - openevolve.evaluator - INFO - Evaluated program b4df0905-8eac-4b44-a953-d8508258de10 in 159.85s: combined_score=9.8409, best_true_reward=0.0667, avg_true_reward=0.0250, stability=0.9768, budget_efficiency=1.0080, budget_used=119048.0000, round_count=32.0000, active_arms_final=2.0000, early_stop_triggered=0.0000, valid=1.0000, selected_strategy=1.0000, stage_scale=1.0000, comparison_mode=1.0000, stage1_passed=1.0000, stage2_passed=1.0000, stage3_passed=1.0000
+2026-04-30 00:28:05,573 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'best_true_reward': 4, 'stability': 4}
+2026-04-30 00:28:05,574 - openevolve.process_parallel - INFO - Initialized process parallel controller with 1 workers
+2026-04-30 00:28:05,575 - openevolve.process_parallel - INFO - Started process pool with 1 processes
+2026-04-30 00:28:05,576 - openevolve.controller - INFO - Using island-based evolution with 2 islands
+2026-04-30 00:28:05,576 - openevolve.database - INFO - Island Status:
+2026-04-30 00:28:05,576 - openevolve.database - INFO -  * Island 0: 1 programs, best=9.8409, avg=9.8409, diversity=0.00, gen=0 (best: b4df0905-8eac-4b44-a953-d8508258de10)
+2026-04-30 00:28:05,576 - openevolve.database - INFO -    Island 1: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-04-30 00:28:05,576 - openevolve.process_parallel - INFO - Starting process-based evolution from iteration 1 for 10 iterations (total: 11)
+2026-04-30 00:28:05,626 - openevolve.process_parallel - INFO - Early stopping enabled: patience=8, threshold=0.0001, metric=combined_score
+2026-04-30 00:28:05,656 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-04-30 00:28:05,657 - openevolve.evaluator - INFO - Successfully loaded evaluation function from /home/haosheng/FastReward/src/openevolve_frozenlake/evaluate_frozenlake_reward.py
+2026-04-30 00:28:05,657 - openevolve.evaluator - INFO - Initialized evaluator with /home/haosheng/FastReward/src/openevolve_frozenlake/evaluate_frozenlake_reward.py
+2026-04-30 00:28:05,658 - openevolve.llm.ensemble - INFO - Sampled model: deepseek-v4-flash
+2026-04-30 00:28:06,047 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-30 00:28:33,517 - openevolve.evaluator - INFO - Evaluated program 040e9400-9c9c-4b33-a786-ef6685950493 in 0.04s: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:28:33,520 - openevolve.llm.ensemble - INFO - Sampled model: deepseek-v4-flash
+2026-04-30 00:28:33,524 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'best_true_reward': 0, 'stability': 0}
+2026-04-30 00:28:33,525 - openevolve.process_parallel - INFO - Iteration 1: Program 040e9400-9c9c-4b33-a786-ef6685950493 (parent: b4df0905-8eac-4b44-a953-d8508258de10) completed in 27.86s
+2026-04-30 00:28:33,525 - openevolve.process_parallel - INFO - Metrics: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:28:33,598 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-30 00:29:03,626 - openevolve.evaluator - INFO - Evaluated program c9e643dd-d6a6-4fbc-ab94-7e9cf1406b86 in 0.03s: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:29:03,629 - openevolve.llm.ensemble - INFO - Sampled model: deepseek-v4-flash
+2026-04-30 00:29:03,632 - openevolve.database - INFO - New MAP-Elites cell occupied in island 1: {'best_true_reward': 0, 'stability': 0}
+2026-04-30 00:29:03,632 - openevolve.process_parallel - INFO - Iteration 2: Program c9e643dd-d6a6-4fbc-ab94-7e9cf1406b86 (parent: b4df0905-8eac-4b44-a953-d8508258de10) completed in 30.11s
+2026-04-30 00:29:03,632 - openevolve.process_parallel - INFO - Metrics: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:29:03,720 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-30 00:29:20,418 - openevolve.evaluator - INFO - Evaluated program c90fe2ae-bdb1-4b0b-a7e7-532a43ac6a69 in 0.03s: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:29:20,421 - openevolve.llm.ensemble - INFO - Sampled model: deepseek-v4-flash
+2026-04-30 00:29:20,428 - openevolve.process_parallel - INFO - Iteration 3: Program c90fe2ae-bdb1-4b0b-a7e7-532a43ac6a69 (parent: 040e9400-9c9c-4b33-a786-ef6685950493) completed in 16.79s
+2026-04-30 00:29:20,428 - openevolve.process_parallel - INFO - Metrics: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:29:20,652 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-30 00:29:48,584 - openevolve.evaluator - INFO - Evaluated program e853f605-9f56-4449-b9dd-49141e93152b in 0.03s: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:29:48,588 - openevolve.llm.ensemble - INFO - Sampled model: deepseek-v4-flash
+2026-04-30 00:29:48,594 - openevolve.process_parallel - INFO - Iteration 4: Program e853f605-9f56-4449-b9dd-49141e93152b (parent: c9e643dd-d6a6-4fbc-ab94-7e9cf1406b86) completed in 28.16s
+2026-04-30 00:29:48,595 - openevolve.process_parallel - INFO - Metrics: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:29:48,670 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-30 00:30:06,440 - openevolve.evaluator - INFO - Evaluated program 1e7266b6-2024-4719-838b-72430ea651b8 in 0.02s: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:30:06,443 - openevolve.llm.ensemble - INFO - Sampled model: deepseek-v4-flash
+2026-04-30 00:30:06,450 - openevolve.process_parallel - INFO - Iteration 5: Program 1e7266b6-2024-4719-838b-72430ea651b8 (parent: 040e9400-9c9c-4b33-a786-ef6685950493) completed in 17.85s
+2026-04-30 00:30:06,450 - openevolve.process_parallel - INFO - Metrics: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:30:06,450 - openevolve.process_parallel - INFO - Checkpoint interval reached at iteration 5
+2026-04-30 00:30:06,451 - openevolve.database - INFO - Island Status:
+2026-04-30 00:30:06,451 - openevolve.database - INFO -  * Island 0: 4 programs, best=9.8409, avg=-749999997.5398, diversity=13.70, gen=3 (best: b4df0905-8eac-4b44-a953-d8508258de10)
+2026-04-30 00:30:06,451 - openevolve.database - INFO -    Island 1: 2 programs, best=-1000000000.0000, avg=-1000000000.0000, diversity=208.90, gen=2 (best: c9e643dd-d6a6-4fbc-ab94-7e9cf1406b86)
+2026-04-30 00:30:06,457 - openevolve.database - INFO - Saved database with 6 programs to logs/openevolve_frozenlake/search_20260430_002522/checkpoints/checkpoint_5
+2026-04-30 00:30:06,458 - openevolve.controller - INFO - Saved best program at checkpoint 5 with metrics: combined_score=9.8409, best_true_reward=0.0667, avg_true_reward=0.0250, stability=0.9768, budget_efficiency=1.0080, budget_used=119048.0000, round_count=32.0000, active_arms_final=2.0000, early_stop_triggered=0.0000, valid=1.0000, selected_strategy=1.0000, stage_scale=1.0000, comparison_mode=1.0000, stage1_passed=1.0000, stage2_passed=1.0000, stage3_passed=1.0000
+2026-04-30 00:30:06,458 - openevolve.controller - INFO - Saved checkpoint at iteration 5 to logs/openevolve_frozenlake/search_20260430_002522/checkpoints/checkpoint_5
+2026-04-30 00:30:06,518 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-30 00:30:32,791 - openevolve.evaluator - INFO - Evaluated program bc108d89-8758-43fb-9fa7-f19b1e702555 in 0.03s: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:30:32,794 - openevolve.llm.ensemble - INFO - Sampled model: deepseek-v4-flash
+2026-04-30 00:30:32,799 - openevolve.process_parallel - INFO - Iteration 6: Program bc108d89-8758-43fb-9fa7-f19b1e702555 (parent: c9e643dd-d6a6-4fbc-ab94-7e9cf1406b86) completed in 26.35s
+2026-04-30 00:30:32,799 - openevolve.process_parallel - INFO - Metrics: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:30:32,919 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-30 00:31:05,359 - openevolve.evaluator - INFO - Evaluated program be04f977-b0a6-4353-8aac-dac17a0d62be in 0.02s: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:31:05,361 - openevolve.llm.ensemble - INFO - Sampled model: deepseek-v4-flash
+2026-04-30 00:31:05,365 - openevolve.process_parallel - INFO - Iteration 7: Program be04f977-b0a6-4353-8aac-dac17a0d62be (parent: b4df0905-8eac-4b44-a953-d8508258de10) completed in 32.57s
+2026-04-30 00:31:05,365 - openevolve.process_parallel - INFO - Metrics: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:31:05,459 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-30 00:31:33,948 - openevolve.evaluator - INFO - Evaluated program d90a9457-f641-4d68-ba31-f44589f01fc6 in 0.03s: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:31:33,952 - openevolve.llm.ensemble - INFO - Sampled model: deepseek-v4-flash
+2026-04-30 00:31:33,958 - openevolve.process_parallel - INFO - Iteration 8: Program d90a9457-f641-4d68-ba31-f44589f01fc6 (parent: bc108d89-8758-43fb-9fa7-f19b1e702555) completed in 28.59s
+2026-04-30 00:31:33,958 - openevolve.process_parallel - INFO - Metrics: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:31:34,044 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-30 00:31:57,730 - openevolve.evaluator - INFO - Evaluated program 6c7eaf9a-c9d1-4788-b8e4-ec563db68ed7 in 0.03s: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:31:57,733 - openevolve.llm.ensemble - INFO - Sampled model: deepseek-v4-flash
+2026-04-30 00:31:57,738 - openevolve.process_parallel - INFO - Iteration 9: Program 6c7eaf9a-c9d1-4788-b8e4-ec563db68ed7 (parent: b4df0905-8eac-4b44-a953-d8508258de10) completed in 23.78s
+2026-04-30 00:31:57,738 - openevolve.process_parallel - INFO - Metrics: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:31:57,738 - openevolve.process_parallel - INFO - 🛑 Early stopping triggered at iteration 9: No improvement for 8 iterations (best score: -1000000000.0000)
+2026-04-30 00:31:57,738 - openevolve.process_parallel - INFO - ✅ Evolution completed - Early stopping triggered due to convergence
+2026-04-30 00:31:57,739 - openevolve.controller - INFO - Evolution stopped due to early stopping - saving final checkpoint
+2026-04-30 00:31:57,745 - openevolve.database - INFO - Saved database with 10 programs to logs/openevolve_frozenlake/search_20260430_002522/checkpoints/checkpoint_10
+2026-04-30 00:31:57,745 - openevolve.controller - INFO - Saved best program at checkpoint 10 with metrics: combined_score=9.8409, best_true_reward=0.0667, avg_true_reward=0.0250, stability=0.9768, budget_efficiency=1.0080, budget_used=119048.0000, round_count=32.0000, active_arms_final=2.0000, early_stop_triggered=0.0000, valid=1.0000, selected_strategy=1.0000, stage_scale=1.0000, comparison_mode=1.0000, stage1_passed=1.0000, stage2_passed=1.0000, stage3_passed=1.0000
+2026-04-30 00:31:57,745 - openevolve.controller - INFO - Saved checkpoint at iteration 10 to logs/openevolve_frozenlake/search_20260430_002522/checkpoints/checkpoint_10
+2026-04-30 00:31:57,830 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-30 00:32:22,283 - openevolve.evaluator - INFO - Evaluated program 00fb7be1-fa1a-47f4-80c3-8a6d95b1ff05 in 0.02s: combined_score=-1000000000.0000, best_true_reward=-1000000000.0000, avg_true_reward=-1000000000.0000, stability=0.0000, valid=0.0000, stage_scale=0.2500, stage1_passed=0.0000
+2026-04-30 00:32:22,346 - openevolve.process_parallel - INFO - Stopped process pool
+2026-04-30 00:32:22,353 - openevolve.evolution_trace - INFO - Evolution tracing complete. Total traces: 9
+2026-04-30 00:32:22,353 - openevolve.evolution_trace - INFO - Improvement rate: 0.00%
+2026-04-30 00:32:22,353 - openevolve.evolution_trace - INFO - Best improvements: {'combined_score': 0.0, 'best_true_reward': 0.0, 'avg_true_reward': 0.0, 'stability': 0.0, 'valid': 0.0, 'stage_scale': 0.0, 'stage1_passed': 0.0}
+2026-04-30 00:32:22,353 - openevolve.evolution_trace - INFO - Worst declines: {'combined_score': -1000000009.840924, 'best_true_reward': -1000000000.0666667, 'avg_true_reward': -1000000000.025, 'stability': -0.976800738265998, 'valid': -1.0, 'stage_scale': -0.75, 'stage1_passed': -1.0}
+2026-04-30 00:32:22,353 - openevolve.controller - INFO - Evolution tracer closed
+2026-04-30 00:32:22,353 - openevolve.controller - INFO - Using tracked best program: b4df0905-8eac-4b44-a953-d8508258de10
+2026-04-30 00:32:22,354 - openevolve.controller - INFO - Evolution complete. Best program has metrics: combined_score=9.8409, best_true_reward=0.0667, avg_true_reward=0.0250, stability=0.9768, budget_efficiency=1.0080, budget_used=119048.0000, round_count=32.0000, active_arms_final=2.0000, early_stop_triggered=0.0000, valid=1.0000, selected_strategy=1.0000, stage_scale=1.0000, comparison_mode=1.0000, stage1_passed=1.0000, stage2_passed=1.0000, stage3_passed=1.0000
+2026-04-30 00:32:22,354 - openevolve.controller - INFO - Saved best program to logs/openevolve_frozenlake/search_20260430_002522/best/best_program.py with program info to logs/openevolve_frozenlake/search_20260430_002522/best/best_program_info.json

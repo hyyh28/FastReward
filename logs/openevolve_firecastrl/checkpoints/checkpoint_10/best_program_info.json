@@ -1,0 +1,33 @@
+{
+  "id": "960d5147-55ca-4451-a62d-d690ac061d1e",
+  "generation": 0,
+  "iteration": 0,
+  "current_iteration": 10,
+  "metrics": {
+    "combined_score": -1382.2067209940158,
+    "best_true_reward": -831.5500000000001,
+    "avg_true_reward": -1357.9575,
+    "stability": 1.540059841668245e-05,
+    "valid": 1.0,
+    "ocba_combined_score": -1151.1561519662005,
+    "uniform_combined_score": -1613.257290021831,
+    "ocba_best_true_reward": -831.5500000000001,
+    "uniform_best_true_reward": -1253.885,
+    "ocba_avg_true_reward": -1278.425,
+    "uniform_avg_true_reward": -1437.49,
+    "ocba_stability": 9.803379955912779e-06,
+    "uniform_stability": 2.099781687745212e-05,
+    "ocba_budget_used": 440000.0,
+    "uniform_budget_used": 440128.0,
+    "delta_best_true_reward_ocba_minus_uniform": 422.3349999999999,
+    "delta_combined_score_ocba_minus_uniform": 462.1011380556306,
+    "stage_scale": 1.0,
+    "comparison_mode": 2.0,
+    "stage1_passed": 1.0,
+    "stage2_passed": 1.0,
+    "stage3_passed": 1.0
+  },
+  "language": "python",
+  "timestamp": 1777429336.7181528,
+  "saved_at": 1777429611.101293
+}

@@ -1,0 +1,28 @@
+{
+  "n_candidates": 16,
+  "delta_budget_used_ocba_minus_uniform": {
+    "mean": 16018.5,
+    "ci_low": 8912.41209404781,
+    "ci_high": 23124.58790595219
+  },
+  "ocba_budget_save_ratio_vs_uniform": {
+    "mean": -0.37373180058542155,
+    "ci_low": -0.49775716836046235,
+    "ci_high": -0.24970643281038074
+  },
+  "delta_combined_score_ocba_minus_uniform": {
+    "mean": -0.03893170104167876,
+    "ci_low": -0.07942652478735726,
+    "ci_high": 0.0015631227039997406
+  },
+  "delta_best_true_reward_ocba_minus_uniform": {
+    "mean": -0.013541666666666667,
+    "ci_low": -0.03940456865144158,
+    "ci_high": 0.012321235318108244
+  },
+  "ocba_budget_used_mean": 60690.5,
+  "uniform_budget_used_mean": 44672.0,
+  "ocba_early_stop_rate": 0.875,
+  "uniform_early_stop_rate": 1.0
+}
+csv_saved=logs/openevolve_frozenlake/offline_compare_5groups_20260430_003223/group_19/summary.csv

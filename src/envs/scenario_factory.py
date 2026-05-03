@@ -135,14 +135,28 @@ class FrozenLakeScenarioFactory:
         self,
         shaping_type: str,
         n_envs: int,
-        map_name: str = "8x8",
+        map_name: str = "4x4",
         is_slippery: bool = True,
+        vec_env_type: str = "dummy",
+        seed: int = 0,
     ):
-        def make_env():
-            base = gym.make("FrozenLake-v1", map_name=map_name, is_slippery=is_slippery)
-            if shaping_type == "true_env":
-                return Monitor(base)
-            wrapped = FrozenLakeRewardWrapper(base, shaping_type=shaping_type, gamma=self.gamma)
-            return Monitor(wrapped)
+        def make_env(rank: int):
+            def _init():
+                base = gym.make("FrozenLake-v1", map_name=map_name, is_slippery=is_slippery)
+                if shaping_type == "true_env":
+                    env = Monitor(base)
+                else:
+                    wrapped = FrozenLakeRewardWrapper(base, shaping_type=shaping_type, gamma=self.gamma)
+                    env = Monitor(wrapped)
+                env.reset(seed=int(seed) + int(rank))
+                return env
 
-        return DummyVecEnv([make_env for _ in range(n_envs)])
+            return _init
+
+        env_fns = [make_env(rank) for rank in range(n_envs)]
+        vt = vec_env_type.lower()
+        if vt == "subproc":
+            return SubprocVecEnv(env_fns)
+        if vt == "dummy":
+            return DummyVecEnv(env_fns)
+        raise ValueError(f"Unsupported vec_env_type for FrozenLake: {vec_env_type!r}. Use 'dummy' or 'subproc'.")

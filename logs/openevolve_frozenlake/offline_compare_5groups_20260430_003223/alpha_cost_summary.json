@@ -1,0 +1,29 @@
+{
+  "run_root": "logs/openevolve_frozenlake/offline_compare_5groups_20260430_003223",
+  "alphas": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.85,
+    0.9,
+    0.95,
+    1.0
+  ],
+  "overall_steps": {
+    "n_records": 309.0,
+    "total_ocba_steps": 27211160.0,
+    "total_uniform_steps": 21141696.0,
+    "delta_steps_ocba_minus_uniform": 6069464.0
+  },
+  "curve_csv": "logs/openevolve_frozenlake/offline_compare_5groups_20260430_003223/alpha_cost_curve.csv",
+  "pair_csv": "logs/openevolve_frozenlake/offline_compare_5groups_20260430_003223/alpha_pair_hits.csv",
+  "rounds_plot_output": "logs/openevolve_frozenlake/offline_compare_5groups_20260430_003223/alpha_rounds_curve.pdf",
+  "rounds_plot_written": true,
+  "steps_plot_output": "logs/openevolve_frozenlake/offline_compare_5groups_20260430_003223/alpha_steps_curve.png",
+  "steps_plot_written": true,
+  "tradeoff_plot_output": "logs/openevolve_frozenlake/offline_compare_5groups_20260430_003223/alpha_tradeoff_curve.png",
+  "tradeoff_plot_written": true,
+  "n_curve_rows": 8,
+  "n_pair_rows": 2472
+}

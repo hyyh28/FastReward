@@ -84,9 +84,7 @@ def _build_eval_config(
 
 def _strategy_mode() -> str:
     mode = os.getenv("FROZENLAKE_ALLOC_STRATEGY", "ocba").strip().lower()
-    if mode == "both":
-        return "ocba"
-    if mode not in {"ocba", "uniform"}:
+    if mode not in {"both", "ocba", "uniform"}:
         return "ocba"
     return mode
 
@@ -122,6 +120,7 @@ def _evaluate(program_path: str, stage_scale: float, seed_offset: int = 0) -> di
         module = _load_candidate_module(program_path)
         reward_fn = _extract_reward_fn(module)
         mode = _strategy_mode()
+        strategy_seed_base = seed_offset + 1_000
 
         strategy_metrics: dict[str, dict[str, float]] = {}
         if mode in {"both", "ocba"}:
@@ -129,14 +128,14 @@ def _evaluate(program_path: str, stage_scale: float, seed_offset: int = 0) -> di
                 reward_fn=reward_fn,
                 strategy_name="improved_ocba",
                 stage_scale=stage_scale,
-                seed_offset=seed_offset + 1_000,
+                seed_offset=strategy_seed_base,
             )
         if mode in {"both", "uniform"}:
             strategy_metrics["uniform"] = _run_single_strategy(
                 reward_fn=reward_fn,
                 strategy_name="uniform",
                 stage_scale=stage_scale,
-                seed_offset=seed_offset + 2_000,
+                seed_offset=strategy_seed_base,
             )
 
         if "ocba" in strategy_metrics and "uniform" in strategy_metrics:
