@@ -1,0 +1,1926 @@
+{
+  "run_id": "20260503_141217",
+  "config": {
+    "candidates": [
+      "safe_distance",
+      "risk_aware",
+      "deceptive",
+      "bad"
+    ],
+    "total_budget": 3932160,
+    "warmup_budget_per_candidate": 262144,
+    "delta_budget_per_round": 262144,
+    "n_envs": 16,
+    "n_steps": 2048,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "n_epochs": 6,
+    "learning_rate": 0.0003,
+    "batch_size": 512,
+    "ent_coef": 0.02,
+    "n_eval_episodes_true": 80,
+    "n_eval_episodes_shaped": 40,
+    "map_name": "8x8",
+    "is_slippery": true,
+    "vec_env_type": "dummy",
+    "vec_env_seed": 0
+  },
+  "results": {
+    "uniform": {
+      "candidates": [
+        "safe_distance",
+        "risk_aware",
+        "deceptive",
+        "bad"
+      ],
+      "budgets_history": [
+        1048576,
+        1310720,
+        1572864,
+        1835008,
+        2097152,
+        2359296,
+        2621440,
+        2883584,
+        3145728,
+        3407872,
+        3670016,
+        3932160
+      ],
+      "best_reward_history": [
+        0.5875,
+        0.5875,
+        0.5875,
+        0.5875,
+        0.5875,
+        0.5875,
+        0.5625,
+        0.5875,
+        0.5875,
+        0.5875,
+        0.5875,
+        0.5875
+      ],
+      "per_candidate_reward_history": {
+        "safe_distance": [
+          0.1375,
+          0.5875,
+          0.5875,
+          0.5875,
+          0.5875,
+          0.5875,
+          0.5625,
+          0.5875,
+          0.5875,
+          0.5875,
+          0.5875,
+          0.5875
+        ],
+        "risk_aware": [
+          0.1375,
+          0.1875,
+          0.25,
+          0.4,
+          0.4625,
+          0.525,
+          0.525,
+          0.525,
+          0.525,
+          0.525,
+          0.5625,
+          0.575
+        ],
+        "deceptive": [
+          0.5875,
+          0.125,
+          0.125,
+          0.125,
+          0.125,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "bad": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0125,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "shaped_return_history": {
+        "safe_distance": [
+          19.710044625000002,
+          57.66843745,
+          60.19145535,
+          60.19145535,
+          60.194866049999995,
+          57.66843745,
+          57.697732099999996,
+          57.66843745,
+          60.19145535,
+          60.19145535,
+          57.66843745,
+          57.66843745
+        ],
+        "risk_aware": [
+          15.079941150000002,
+          27.556690749999994,
+          27.491756,
+          47.5515892,
+          45.046182900000005,
+          57.537523424999996,
+          57.537523424999996,
+          57.537523424999996,
+          57.537523424999996,
+          57.537523424999996,
+          57.537463425,
+          55.008347400000005
+        ],
+        "deceptive": [
+          4.660907175,
+          4.310535724999999,
+          4.310535724999999,
+          4.1681143,
+          4.3657572,
+          4.158892825000001,
+          4.242285725,
+          4.0487786,
+          4.0487786,
+          4.0487786,
+          4.0650786000000005,
+          3.8621428250000003
+        ],
+        "bad": [
+          -25.116642849999998,
+          -25.116642849999998,
+          -24.8215625,
+          -25.113848225,
+          -22.615535725,
+          -25.113848225,
+          -25.117303575,
+          -25.117303575,
+          -25.117303575,
+          -25.117303575,
+          -25.117303575,
+          -25.117303575
+        ]
+      },
+      "per_round_allocation_history": {
+        "safe_distance": [
+          262144,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536
+        ],
+        "risk_aware": [
+          262144,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536
+        ],
+        "deceptive": [
+          262144,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536
+        ],
+        "bad": [
+          262144,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536,
+          65536
+        ]
+      },
+      "round_records": [
+        {
+          "round_index": 0,
+          "budget_consumed": 1048576,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.1375,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 19.710044625000002,
+              "allocation_this_round": 262144,
+              "allocation_cumulative": 262144
+            },
+            "risk_aware": {
+              "true_mean_return": 0.1375,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 15.079941150000002,
+              "allocation_this_round": 262144,
+              "allocation_cumulative": 262144
+            },
+            "deceptive": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.660907175,
+              "allocation_this_round": 262144,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.116642849999998,
+              "allocation_this_round": 262144,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 1,
+          "budget_consumed": 1310720,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.66843745,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 327680
+            },
+            "risk_aware": {
+              "true_mean_return": 0.1875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 27.556690749999994,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 327680
+            },
+            "deceptive": {
+              "true_mean_return": 0.125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.310535724999999,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 327680
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.116642849999998,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 327680
+            }
+          }
+        },
+        {
+          "round_index": 2,
+          "budget_consumed": 1572864,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 60.19145535,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 393216
+            },
+            "risk_aware": {
+              "true_mean_return": 0.25,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 27.491756,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 393216
+            },
+            "deceptive": {
+              "true_mean_return": 0.125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.310535724999999,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 393216
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -24.8215625,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 393216
+            }
+          }
+        },
+        {
+          "round_index": 3,
+          "budget_consumed": 1835008,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 60.19145535,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 458752
+            },
+            "risk_aware": {
+              "true_mean_return": 0.4,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 47.5515892,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 458752
+            },
+            "deceptive": {
+              "true_mean_return": 0.125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.1681143,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 458752
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.113848225,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 458752
+            }
+          }
+        },
+        {
+          "round_index": 4,
+          "budget_consumed": 2097152,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 60.194866049999995,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 524288
+            },
+            "risk_aware": {
+              "true_mean_return": 0.4625,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 45.046182900000005,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 524288
+            },
+            "deceptive": {
+              "true_mean_return": 0.125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.3657572,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 524288
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -22.615535725,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 524288
+            }
+          }
+        },
+        {
+          "round_index": 5,
+          "budget_consumed": 2359296,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.66843745,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 589824
+            },
+            "risk_aware": {
+              "true_mean_return": 0.525,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.537523424999996,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 589824
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.158892825000001,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 589824
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.113848225,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 589824
+            }
+          }
+        },
+        {
+          "round_index": 6,
+          "budget_consumed": 2621440,
+          "best_true_return": 0.5625,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5625,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.697732099999996,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 655360
+            },
+            "risk_aware": {
+              "true_mean_return": 0.525,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.537523424999996,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 655360
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.242285725,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 655360
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117303575,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 655360
+            }
+          }
+        },
+        {
+          "round_index": 7,
+          "budget_consumed": 2883584,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.66843745,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 720896
+            },
+            "risk_aware": {
+              "true_mean_return": 0.525,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.537523424999996,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 720896
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.0487786,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 720896
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117303575,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 720896
+            }
+          }
+        },
+        {
+          "round_index": 8,
+          "budget_consumed": 3145728,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 60.19145535,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 786432
+            },
+            "risk_aware": {
+              "true_mean_return": 0.525,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.537523424999996,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 786432
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.0487786,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 786432
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117303575,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 786432
+            }
+          }
+        },
+        {
+          "round_index": 9,
+          "budget_consumed": 3407872,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 60.19145535,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 851968
+            },
+            "risk_aware": {
+              "true_mean_return": 0.525,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.537523424999996,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 851968
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.0487786,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 851968
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117303575,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 851968
+            }
+          }
+        },
+        {
+          "round_index": 10,
+          "budget_consumed": 3670016,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.66843745,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 917504
+            },
+            "risk_aware": {
+              "true_mean_return": 0.5625,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.537463425,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 917504
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.0650786000000005,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 917504
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117303575,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 917504
+            }
+          }
+        },
+        {
+          "round_index": 11,
+          "budget_consumed": 3932160,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.66843745,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 983040
+            },
+            "risk_aware": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 55.008347400000005,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 983040
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.8621428250000003,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 983040
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117303575,
+              "allocation_this_round": 65536,
+              "allocation_cumulative": 983040
+            }
+          }
+        }
+      ]
+    },
+    "ocba": {
+      "candidates": [
+        "safe_distance",
+        "risk_aware",
+        "deceptive",
+        "bad"
+      ],
+      "budgets_history": [
+        1048576,
+        1310720,
+        1572864,
+        1835008,
+        2097152,
+        2359296,
+        2621440,
+        2883584,
+        3145728,
+        3407872,
+        3670016,
+        3932160
+      ],
+      "best_reward_history": [
+        0.275,
+        0.3625,
+        0.575,
+        0.4375,
+        0.5375,
+        0.575,
+        0.575,
+        0.575,
+        0.575,
+        0.55,
+        0.55,
+        0.575
+      ],
+      "per_candidate_reward_history": {
+        "safe_distance": [
+          0.1875,
+          0.1875,
+          0.4375,
+          0.4125,
+          0.525,
+          0.5625,
+          0.5625,
+          0.575,
+          0.575,
+          0.5375,
+          0.55,
+          0.55
+        ],
+        "risk_aware": [
+          0.2625,
+          0.3625,
+          0.575,
+          0.4375,
+          0.5375,
+          0.575,
+          0.575,
+          0.575,
+          0.575,
+          0.55,
+          0.55,
+          0.575
+        ],
+        "deceptive": [
+          0.275,
+          0.2875,
+          0.2875,
+          0.2875,
+          0.2875,
+          0.2875,
+          0.2875,
+          0.2875,
+          0.2875,
+          0.2875,
+          0.2875,
+          0.2875
+        ],
+        "bad": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "shaped_return_history": {
+        "safe_distance": [
+          19.702508975,
+          19.702508975,
+          45.053294525,
+          50.07883937500001,
+          55.14608925,
+          57.671955325,
+          57.671955325,
+          55.178214225,
+          55.178214225,
+          62.65382145000001,
+          62.68283925000001,
+          62.68283925000001
+        ],
+        "risk_aware": [
+          14.9234142,
+          34.957902849999996,
+          55.028934775,
+          39.97966004999999,
+          52.5419028,
+          52.506742800000005,
+          55.03092055,
+          52.506742800000005,
+          52.506742800000005,
+          55.06127772499999,
+          55.06127772499999,
+          52.506742800000005
+        ],
+        "deceptive": [
+          4.3031571,
+          4.24037145,
+          4.24037145,
+          4.24037145,
+          4.24037145,
+          4.24037145,
+          4.24037145,
+          4.24037145,
+          4.24037145,
+          4.24037145,
+          4.24037145,
+          4.24037145
+        ],
+        "bad": [
+          -25.117098200000004,
+          -25.117098200000004,
+          -25.117098200000004,
+          -25.117098200000004,
+          -25.117098200000004,
+          -25.117098200000004,
+          -25.117098200000004,
+          -25.117098200000004,
+          -25.117098200000004,
+          -25.117098200000004,
+          -25.117098200000004,
+          -25.117098200000004
+        ]
+      },
+      "per_round_allocation_history": {
+        "safe_distance": [
+          262144,
+          0,
+          32768,
+          98304,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072
+        ],
+        "risk_aware": [
+          262144,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072
+        ],
+        "deceptive": [
+          262144,
+          131072,
+          98304,
+          32768,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "bad": [
+          262144,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "round_records": [
+        {
+          "round_index": 0,
+          "budget_consumed": 1048576,
+          "best_true_return": 0.275,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.1875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 19.702508975,
+              "allocation_this_round": 262144,
+              "allocation_cumulative": 262144
+            },
+            "risk_aware": {
+              "true_mean_return": 0.2625,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 14.9234142,
+              "allocation_this_round": 262144,
+              "allocation_cumulative": 262144
+            },
+            "deceptive": {
+              "true_mean_return": 0.275,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.3031571,
+              "allocation_this_round": 262144,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117098200000004,
+              "allocation_this_round": 262144,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 1,
+          "budget_consumed": 1310720,
+          "best_true_return": 0.3625,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.1875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 19.702508975,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            },
+            "risk_aware": {
+              "true_mean_return": 0.3625,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 34.957902849999996,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 393216
+            },
+            "deceptive": {
+              "true_mean_return": 0.2875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.24037145,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 393216
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117098200000004,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 2,
+          "budget_consumed": 1572864,
+          "best_true_return": 0.575,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.4375,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 45.053294525,
+              "allocation_this_round": 32768,
+              "allocation_cumulative": 294912
+            },
+            "risk_aware": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 55.028934775,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 524288
+            },
+            "deceptive": {
+              "true_mean_return": 0.2875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.24037145,
+              "allocation_this_round": 98304,
+              "allocation_cumulative": 491520
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117098200000004,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 3,
+          "budget_consumed": 1835008,
+          "best_true_return": 0.4375,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.4125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 50.07883937500001,
+              "allocation_this_round": 98304,
+              "allocation_cumulative": 393216
+            },
+            "risk_aware": {
+              "true_mean_return": 0.4375,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 39.97966004999999,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 655360
+            },
+            "deceptive": {
+              "true_mean_return": 0.2875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.24037145,
+              "allocation_this_round": 32768,
+              "allocation_cumulative": 524288
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117098200000004,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 4,
+          "budget_consumed": 2097152,
+          "best_true_return": 0.5375,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.525,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 55.14608925,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 524288
+            },
+            "risk_aware": {
+              "true_mean_return": 0.5375,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 52.5419028,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 786432
+            },
+            "deceptive": {
+              "true_mean_return": 0.2875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.24037145,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 524288
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117098200000004,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 5,
+          "budget_consumed": 2359296,
+          "best_true_return": 0.575,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5625,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.671955325,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 655360
+            },
+            "risk_aware": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 52.506742800000005,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 917504
+            },
+            "deceptive": {
+              "true_mean_return": 0.2875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.24037145,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 524288
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117098200000004,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 6,
+          "budget_consumed": 2621440,
+          "best_true_return": 0.575,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5625,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.671955325,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 786432
+            },
+            "risk_aware": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 55.03092055,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1048576
+            },
+            "deceptive": {
+              "true_mean_return": 0.2875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.24037145,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 524288
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117098200000004,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 7,
+          "budget_consumed": 2883584,
+          "best_true_return": 0.575,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 55.178214225,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 917504
+            },
+            "risk_aware": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 52.506742800000005,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1179648
+            },
+            "deceptive": {
+              "true_mean_return": 0.2875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.24037145,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 524288
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117098200000004,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 8,
+          "budget_consumed": 3145728,
+          "best_true_return": 0.575,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 55.178214225,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1048576
+            },
+            "risk_aware": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 52.506742800000005,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1310720
+            },
+            "deceptive": {
+              "true_mean_return": 0.2875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.24037145,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 524288
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117098200000004,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 9,
+          "budget_consumed": 3407872,
+          "best_true_return": 0.55,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5375,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 62.65382145000001,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1179648
+            },
+            "risk_aware": {
+              "true_mean_return": 0.55,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 55.06127772499999,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1441792
+            },
+            "deceptive": {
+              "true_mean_return": 0.2875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.24037145,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 524288
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117098200000004,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 10,
+          "budget_consumed": 3670016,
+          "best_true_return": 0.55,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.55,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 62.68283925000001,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1310720
+            },
+            "risk_aware": {
+              "true_mean_return": 0.55,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 55.06127772499999,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1572864
+            },
+            "deceptive": {
+              "true_mean_return": 0.2875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.24037145,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 524288
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117098200000004,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 11,
+          "budget_consumed": 3932160,
+          "best_true_return": 0.575,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.55,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 62.68283925000001,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1441792
+            },
+            "risk_aware": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 52.506742800000005,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1703936
+            },
+            "deceptive": {
+              "true_mean_return": 0.2875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 4.24037145,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 524288
+            },
+            "bad": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -25.117098200000004,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        }
+      ]
+    },
+    "adapted_ocba": {
+      "candidates": [
+        "safe_distance",
+        "risk_aware",
+        "deceptive",
+        "bad"
+      ],
+      "budgets_history": [
+        1048576,
+        1310720,
+        1572864,
+        1835008,
+        2097152,
+        2359296,
+        2621440,
+        2883584,
+        3145728,
+        3407872,
+        3670016,
+        3932160
+      ],
+      "best_reward_history": [
+        0.275,
+        0.275,
+        0.425,
+        0.525,
+        0.525,
+        0.575,
+        0.5875,
+        0.5875,
+        0.575,
+        0.575,
+        0.5625,
+        0.575
+      ],
+      "per_candidate_reward_history": {
+        "safe_distance": [
+          0.2625,
+          0.275,
+          0.425,
+          0.525,
+          0.475,
+          0.575,
+          0.575,
+          0.575,
+          0.575,
+          0.525,
+          0.4875,
+          0.5375
+        ],
+        "risk_aware": [
+          0.275,
+          0.2,
+          0.4,
+          0.4625,
+          0.525,
+          0.525,
+          0.5875,
+          0.5875,
+          0.575,
+          0.575,
+          0.5625,
+          0.575
+        ],
+        "deceptive": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "bad": [
+          0.0125,
+          0.0125,
+          0.0125,
+          0.0125,
+          0.0125,
+          0.0125,
+          0.0125,
+          0.0125,
+          0.0125,
+          0.0125,
+          0.0125,
+          0.0125
+        ]
+      },
+      "shaped_return_history": {
+        "safe_distance": [
+          19.80157145,
+          29.8724554,
+          47.490401774999995,
+          57.67189282500001,
+          47.60140175,
+          55.178214225,
+          55.178214225,
+          55.178214225,
+          55.178214225,
+          57.6909553,
+          65.17492854999999,
+          62.65382145000001
+        ],
+        "risk_aware": [
+          32.4857509,
+          17.450167475,
+          45.03078575,
+          47.51760912499999,
+          57.537523424999996,
+          57.537523424999996,
+          57.535904525,
+          57.535904525,
+          65.106769125,
+          65.106769125,
+          60.07192687500001,
+          65.106769125
+        ],
+        "deceptive": [
+          3.7081785750000003,
+          3.7081785750000003,
+          3.7081785750000003,
+          3.7081785750000003,
+          3.7081785750000003,
+          3.7081785750000003,
+          3.7081785750000003,
+          3.7081785750000003,
+          3.7081785750000003,
+          3.7081785750000003,
+          3.7081785750000003,
+          3.7081785750000003
+        ],
+        "bad": [
+          -23.216473175,
+          -23.216473175,
+          -23.216473175,
+          -23.216473175,
+          -23.216473175,
+          -23.216473175,
+          -23.216473175,
+          -23.216473175,
+          -23.216473175,
+          -23.216473175,
+          -23.216473175,
+          -23.216473175
+        ]
+      },
+      "per_round_allocation_history": {
+        "safe_distance": [
+          262144,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072
+        ],
+        "risk_aware": [
+          262144,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072,
+          131072
+        ],
+        "deceptive": [
+          262144,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "bad": [
+          262144,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "round_records": [
+        {
+          "round_index": 0,
+          "budget_consumed": 1048576,
+          "best_true_return": 0.275,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.2625,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 19.80157145,
+              "allocation_this_round": 262144,
+              "allocation_cumulative": 262144
+            },
+            "risk_aware": {
+              "true_mean_return": 0.275,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 32.4857509,
+              "allocation_this_round": 262144,
+              "allocation_cumulative": 262144
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.7081785750000003,
+              "allocation_this_round": 262144,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -23.216473175,
+              "allocation_this_round": 262144,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 1,
+          "budget_consumed": 1310720,
+          "best_true_return": 0.275,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.275,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 29.8724554,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 393216
+            },
+            "risk_aware": {
+              "true_mean_return": 0.2,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 17.450167475,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 393216
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.7081785750000003,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -23.216473175,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 2,
+          "budget_consumed": 1572864,
+          "best_true_return": 0.425,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.425,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 47.490401774999995,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 524288
+            },
+            "risk_aware": {
+              "true_mean_return": 0.4,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 45.03078575,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 524288
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.7081785750000003,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -23.216473175,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 3,
+          "budget_consumed": 1835008,
+          "best_true_return": 0.525,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.525,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.67189282500001,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 655360
+            },
+            "risk_aware": {
+              "true_mean_return": 0.4625,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 47.51760912499999,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 655360
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.7081785750000003,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -23.216473175,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 4,
+          "budget_consumed": 2097152,
+          "best_true_return": 0.525,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.475,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 47.60140175,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 786432
+            },
+            "risk_aware": {
+              "true_mean_return": 0.525,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.537523424999996,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 786432
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.7081785750000003,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -23.216473175,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 5,
+          "budget_consumed": 2359296,
+          "best_true_return": 0.575,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 55.178214225,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 917504
+            },
+            "risk_aware": {
+              "true_mean_return": 0.525,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.537523424999996,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 917504
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.7081785750000003,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -23.216473175,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 6,
+          "budget_consumed": 2621440,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 55.178214225,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1048576
+            },
+            "risk_aware": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.535904525,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1048576
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.7081785750000003,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -23.216473175,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 7,
+          "budget_consumed": 2883584,
+          "best_true_return": 0.5875,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 55.178214225,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1179648
+            },
+            "risk_aware": {
+              "true_mean_return": 0.5875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.535904525,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1179648
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.7081785750000003,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -23.216473175,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 8,
+          "budget_consumed": 3145728,
+          "best_true_return": 0.575,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 55.178214225,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1310720
+            },
+            "risk_aware": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 65.106769125,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1310720
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.7081785750000003,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -23.216473175,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 9,
+          "budget_consumed": 3407872,
+          "best_true_return": 0.575,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.525,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 57.6909553,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1441792
+            },
+            "risk_aware": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 65.106769125,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1441792
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.7081785750000003,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -23.216473175,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 10,
+          "budget_consumed": 3670016,
+          "best_true_return": 0.5625,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.4875,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 65.17492854999999,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1572864
+            },
+            "risk_aware": {
+              "true_mean_return": 0.5625,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 60.07192687500001,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1572864
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.7081785750000003,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -23.216473175,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        },
+        {
+          "round_index": 11,
+          "budget_consumed": 3932160,
+          "best_true_return": 0.575,
+          "per_candidate": {
+            "safe_distance": {
+              "true_mean_return": 0.5375,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 62.65382145000001,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1703936
+            },
+            "risk_aware": {
+              "true_mean_return": 0.575,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 65.106769125,
+              "allocation_this_round": 131072,
+              "allocation_cumulative": 1703936
+            },
+            "deceptive": {
+              "true_mean_return": 0.0,
+              "true_return_var": 1.0,
+              "shaped_mean_return": 3.7081785750000003,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            },
+            "bad": {
+              "true_mean_return": 0.0125,
+              "true_return_var": 1.0,
+              "shaped_mean_return": -23.216473175,
+              "allocation_this_round": 0,
+              "allocation_cumulative": 262144
+            }
+          }
+        }
+      ]
+    }
+  }
+}
