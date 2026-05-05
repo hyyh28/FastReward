@@ -408,23 +408,24 @@ def plot_combined_figure(
     output_path: Path,
     top_strategies: list[dict] | None = None,
 ) -> None:
-    """Two-row PDF: (top) budget fraction for OCBA variants only; (bottom) horizontal uniform-reference bars."""
+
     plt = _setup_matplotlib()
     import matplotlib.gridspec as gridspec
 
     top_strategies = STRATEGIES_OCBA_TOP if top_strategies is None else top_strategies
 
-    fig = plt.figure(figsize=(5.4, 4.35))
-    fig.patch.set_facecolor("white")
+    fig = plt.figure(figsize=(6, 4.35), facecolor="white")
     gs = gridspec.GridSpec(2, 1, height_ratios=[2.0, 1.0], hspace=0.48)
 
     ax0 = fig.add_subplot(gs[0])
     ax1 = fig.add_subplot(gs[1])
 
+    # =========================
+    # layout
+    # =========================
     x = np.arange(len(candidates_ordered), dtype=np.float64)
     n_s = len(top_strategies)
-    # Bars must stay inside each category band [i - 0.5, i + 0.5] so xticks stay centered.
-    # With two series: bar centers at i ± half_sep, need half_sep + bar_w/2 <= 0.5 (minus tiny margin).
+
     _edge_slack = 0.02
     if n_s == 2:
         bar_w = 0.28
@@ -435,19 +436,56 @@ def plot_combined_figure(
         offsets = np.array([0.0], dtype=np.float64)
     else:
         cluster_half_w = 0.42
-        span = 2.0 * cluster_half_w
         bar_w = min(0.34, (1.0 - _edge_slack * 2) / max(float(n_s) + 0.5, 1.0))
-        offsets = np.linspace(-cluster_half_w, cluster_half_w, num=n_s) if n_s else np.array([])
+        offsets = np.linspace(-cluster_half_w, cluster_half_w, num=n_s)
 
+    # =========================
+    # y-axis compression
+    # =========================
+    def ymap(y: np.ndarray) -> np.ndarray:
+        y = np.asarray(y, dtype=np.float64)
+        out = np.zeros_like(y)
+
+        low = y <= 0.10
+        mid = (y > 0.10) & (y < 0.38)
+        high = y >= 0.38
+
+        low_scale = 1.0
+        mid_scale = 0.25
+        high_scale = 1.0
+
+        out[low] = y[low] * low_scale
+        out[mid] = 0.10 * low_scale + (y[mid] - 0.10) * mid_scale
+        out[high] = (
+            0.10 * low_scale +
+            (0.38 - 0.10) * mid_scale +
+            (y[high] - 0.38) * high_scale
+        )
+
+        return out
+
+    # =========================
+    # top subplot
+    # =========================
     for s_idx, s in enumerate(top_strategies):
         key = s["key"]
-        ys = np.array([mean_frac[key][i] for i in range(len(candidates_ordered))], dtype=np.float64)
-        lo = np.array([err_lo[key][i] for i in range(len(candidates_ordered))], dtype=np.float64)
-        hi = np.array([err_hi[key][i] for i in range(len(candidates_ordered))], dtype=np.float64)
-        yerr = np.vstack([np.maximum(0, ys - lo), np.maximum(0, hi - ys)])
+
+        ys = np.array(mean_frac[key], dtype=np.float64)
+        lo = np.array(err_lo[key], dtype=np.float64)
+        hi = np.array(err_hi[key], dtype=np.float64)
+
+        ys_v = ymap(ys)
+        lo_v = ymap(lo)
+        hi_v = ymap(hi)
+
+        yerr = np.vstack([
+            np.maximum(0, ys_v - lo_v),
+            np.maximum(0, hi_v - ys_v),
+        ])
+
         ax0.bar(
             x + offsets[s_idx],
-            ys,
+            ys_v,
             width=bar_w * 0.96,
             color=s["color"],
             alpha=0.88,
@@ -459,69 +497,106 @@ def plot_combined_figure(
             error_kw={"linewidth": 0.55, "color": "#333333"},
         )
 
+        # value labels
+        for i in range(len(candidates_ordered)):
+            ax0.text(
+                x[i] + offsets[s_idx],
+                ys_v[i] + 0.01,
+                f"{ys[i]:.2f}",
+                ha="center",
+                va="bottom",
+                fontsize=6,
+            )
+
+    ax0.set_xlabel("Reward shaping candidate", fontweight="bold")
     ax0.set_ylabel("Fraction of total budget", fontweight="bold")
-    ax0.set_ylim(0.0, 0.5)
-    n_cat = len(candidates_ordered)
-    ax0.set_xlim(-0.5, n_cat - 0.5)
-    ax0.grid(axis="y", alpha=0.18, linestyle="-", linewidth=0.5)
-    ax0.tick_params(direction="out", labelbottom=True, bottom=True)
+
+    ax0.set_xticks(np.arange(len(candidates_ordered)))
+    ax0.set_xticklabels([_pretty_name(c) for c in candidates_ordered])
+
+    ax0.set_xlim(-0.5, len(candidates_ordered) - 0.5)
+
+    for tick in ax0.get_xticklabels():
+        tick.set_rotation(20)
+        tick.set_ha("right")
+        tick.set_rotation_mode("anchor")
+
+    ax0.grid(axis="y", alpha=0.18)
     ax0.spines["top"].set_visible(False)
     ax0.spines["right"].set_visible(False)
-    ax0.legend(loc="upper right", frameon=False, handlelength=2.0, prop={"weight": "bold", "size": 8})
-    ax0.set_xticks(np.arange(n_cat, dtype=np.float64))
-    ax0.set_xticklabels([_pretty_name(c) for c in candidates_ordered])
-    for tick in ax0.get_xticklabels():
-        tick.set_fontsize(7)
-        tick.set_rotation(22)
-        tick.set_ha("right")
-    ax0.set_xlabel("Reward shaping candidate", fontweight="bold")
 
+    ax0.legend(frameon=False, fontsize=8)
+
+    real_ticks = [0.00, 0.05, 0.10, 0.15, 0.20, 0.30, 0.38, 0.40, 0.45]
+    ax0.set_yticks(ymap(np.array(real_ticks)))
+    ax0.set_yticklabels([f"{t:.2f}" for t in real_ticks])
+
+    ax0.set_ylim(
+        ymap(np.array([0.0]))[0],
+        ymap(np.array([0.45]))[0]
+    )
+
+    # =========================
+    # bottom subplot
+    # =========================
     means = np.array([mean_true[c] for c in candidates_ordered], dtype=np.float64)
     stds = np.array([std_true[c] for c in candidates_ordered], dtype=np.float64)
-    bar_gray = "#8B8680"
+    vars_ = np.array([var_true[c] for c in candidates_ordered], dtype=np.float64)
+
     y_pos = np.arange(len(candidates_ordered), dtype=np.float64)
-    bar_h = 0.26
+
     ax1.barh(
         y_pos,
         means,
-        height=bar_h,
+        height=0.26,
         color="#E8E4DF",
-        edgecolor=bar_gray,
+        edgecolor="#8B8680",
         linewidth=0.55,
         xerr=stds,
         capsize=2.0,
         error_kw={"linewidth": 0.55, "color": "#333333"},
     )
-    ax1.set_xlabel("Final true return (uniform runs)", fontweight="bold")
-    ax1.set_yticks(y_pos, [_pretty_name(c) for c in candidates_ordered])
-    ax1.set_ylim(y_pos[0] - 0.5, y_pos[-1] + 0.5)
-    for lbl in ax1.get_yticklabels():
-        lbl.set_fontweight("bold")
-    ax1.tick_params(direction="out", labelsize=7)
-    ax1.grid(axis="x", alpha=0.18, linestyle="-", linewidth=0.5)
-    ax1.spines["top"].set_visible(False)
-    ax1.spines["right"].set_visible(False)
-    if means.size:
-        span = float(np.nanmax(means + np.nan_to_num(stds)))
-    else:
-        span = 1.0
-    ax1.set_xlim(left=0.0, right=max(span * 1.2, 0.05))
-    for yi, c in enumerate(candidates_ordered):
+
+    # =========================
+    # μ + Var 标注（新增）
+    # =========================
+    span = float(np.nanmax(means + np.nan_to_num(stds))) if means.size else 1.0
+
+    for i, c in enumerate(candidates_ordered):
         mu = mean_true[c]
-        v = var_true[c]
-        xi = float(means[yi] + (stds[yi] if np.isfinite(stds[yi]) else 0.0))
+        var = var_true[c]
+
         ax1.text(
-            xi + max(span * 0.02, 0.01),
-            yi,
-            f"μ={mu:.3f}, Var={v:.5f}",
+            means[i] + stds[i] + span * 0.02,
+            y_pos[i],
+            f"μ={mu:.3f}, Var={var:.3f}",
             va="center",
             ha="left",
-            fontsize=6,
-            clip_on=True,
+            fontsize=7,
+            color="#333333",
         )
 
+    ax1.set_xlabel("Final true return (uniform runs)", fontweight="bold")
+    ax1.set_yticks(y_pos, [_pretty_name(c) for c in candidates_ordered])
+
+    for lbl in ax1.get_yticklabels():
+        lbl.set_fontweight("bold")
+
+    ax1.tick_params(labelsize=7)
+    ax1.grid(axis="x", alpha=0.18)
+
+    ax1.spines["top"].set_visible(False)
+    ax1.spines["right"].set_visible(False)
+
+    ax1.set_xlim(0.0, max(span * 1.2, 0.05))
+
+    # =========================
+    # layout fix（关键）
+    # =========================
+    fig.tight_layout()
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(output_path, format="pdf", bbox_inches="tight", facecolor=fig.get_facecolor())
+    plt.savefig(output_path, format="pdf", facecolor=fig.get_facecolor())
     plt.close(fig)
 
 
